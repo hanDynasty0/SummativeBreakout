@@ -6,11 +6,11 @@ public class Ball extends Rectangle {
 
 	private int xVelocity, yVelocity;
 	public static final int SPEED = 8;
-	public static final int BALL_DIAMETER = 20; // size of ball
+	public static final int DIAMETER = 20; // size of ball
 
 	// constructor creates a stationary ball at given location with given dimensions
 	public Ball(int x, int y) {
-		super(x, y, BALL_DIAMETER, BALL_DIAMETER);
+		super(x, y, DIAMETER, DIAMETER);
 		xVelocity = 0;
 		yVelocity = 0;
 	}
@@ -66,12 +66,6 @@ public class Ball extends Rectangle {
 	// draws the current location of the ball to the screen
 	public void draw(Graphics g) {
 		g.setColor(Color.white);
-		g.fillOval(x, y, BALL_DIAMETER, BALL_DIAMETER);
-	}
-
-	// remove the ball's visibility to the users
-	public void clear(Graphics g) {
-		g.setColor(Color.black);
-		g.fillOval(x, y, BALL_DIAMETER, BALL_DIAMETER);
+		g.fillOval(x, y, DIAMETER, DIAMETER);
 	}
 }
