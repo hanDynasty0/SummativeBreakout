@@ -14,15 +14,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public Thread gameThread;
 	public Image image;
 	public Graphics graphics;
-	public Paddle paddle1;
+	public Paddle paddle;
 	public Ball ball;
 
 	public GamePanel() {
 
 		// creating two paddles on either ends of the window
-		paddle1 = new Paddle(0, GAME_HEIGHT - Paddle.HEIGHT);
+		paddle = new Paddle((GAME_WIDTH - Paddle.WIDTH)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
 
-		ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, GAME_HEIGHT / 2 - Ball.size / 2);
+		ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, 3*GAME_HEIGHT/4 - Ball.size/2);
 	
 
 		this.setFocusable(true);
@@ -46,7 +46,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// calling all draw methods for all objects to be displayed
 	public void draw(Graphics g) {
-		paddle1.draw(g);
+		paddle.draw(g);
 		ball.draw(g);
 	
 		// instructions are displayed until space bar is hit at the start
@@ -65,7 +65,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// positions of all moving objects constantly updated
 	public void move() {
-		paddle1.move();
+		paddle.move();
 		ball.move();
 
 	}
@@ -74,11 +74,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public void checkCollision() {
 
 		// keep paddle 1 on screen
-		if (paddle1.x <= 0) {
-			paddle1.x = 0;
+		if (paddle.x <= 0) {
+			paddle.x = 0;
 		}
-		if (paddle1.x >= GAME_WIDTH - Paddle.WIDTH) {
-			paddle1.x = GAME_WIDTH - Paddle.WIDTH;
+		if (paddle.x >= GAME_WIDTH - Paddle.WIDTH) {
+			paddle.x = GAME_WIDTH - Paddle.WIDTH;
 		}
 
 
@@ -94,7 +94,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			ball.setXDirection(-ball.xVelocity);
 		}
 		
-		if (ball.x >= GAME_WIDTH) {
+		if (ball.x >= GAME_WIDTH - Ball.size) {
 			ball.x = GAME_WIDTH - Ball.size;
 			ball.setXDirection(-ball.xVelocity);
 		}
@@ -103,12 +103,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		
 
-		if (ball.intersects(paddle1)) {
-			ball.y = GAME_HEIGHT - Paddle.HEIGHT - Ball.size; // prevent ball from bugging
+		if (ball.intersects(paddle)) {
+			int ballX = ball.x + Ball.size/2;
+			int paddleX = paddle.x + Paddle.WIDTH/2;
+			
+			ball.y = paddle.y - Ball.size;
 			ball.setYDirection(-ball.yVelocity); // to bounce back
 			
-			// random y velocity ranging from -9 to 9
-			ball.setXDirection((int) (Math.random() * 19) - 9);
+			// 
+			ball.setXDirection((ballX - paddleX)/4 + (int)(3*Math.random()) - 1);
 
 			// make bounces logical and realistic
 			// if ball hits paddle from top, should bounce off towards bottom
@@ -120,8 +123,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		// if ball hits bottom edge
 		if (ball.y >= GAME_HEIGHT) {
 	
-			paddle1 = new Paddle(0, GAME_HEIGHT - Paddle.HEIGHT);
-			ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, GAME_HEIGHT / 2 - Ball.size / 2);
+			paddle = new Paddle((GAME_WIDTH - Paddle.WIDTH)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
+			ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, 3*GAME_HEIGHT/4 - Ball.size/2);
 			
 
 		}	
@@ -138,9 +141,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		double ns = 1000000000 / amountOfTicks;
 		double delta = 0;
 		long now;
-
-		// running background music
-		Music.RunMusic("Res/music.wav");
 
 		while (true) { // this is the infinite game loop
 
@@ -164,18 +164,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			instructions = false; // stop showing instructions after hitting space bar
-
-		
 		}
 
-		paddle1.keyPressed(e);
+		paddle.keyPressed(e);
 		ball.keyPressed(e);
 	}
 
 	// calls all keyReleased methods for objects if release of key is detected for
 	// further action
 	public void keyReleased(KeyEvent e) {
-		paddle1.keyReleased(e);
+		paddle.keyReleased(e);
 	}
 
 	// left empty as not needed
