@@ -1,71 +1,57 @@
 
+
+
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Ball extends Rectangle {
 
-	private int xVelocity, yVelocity;
-	public static final int SPEED = 8;
-	public static final int DIAMETER = 20; // size of ball
+	public static final int size = 20;
+	public int yVelocity;
+	public int xVelocity;
 
-	// constructor creates a stationary ball at given location with given dimensions
+
 	public Ball(int x, int y) {
-		super(x, y, DIAMETER, DIAMETER);
-		xVelocity = 0;
-		yVelocity = 0;
+		super(x, y, size, size);
 	}
 
-	// accesses the x velocity of the ball
-	public int getXVelocity() {
-		return xVelocity;
-	}
+	public void keyPressed(KeyEvent e) {
 
-	// accesses the y velocity of the ball
-	public int getYVelocity() {
-		return yVelocity;
-	}
+		// if ball is not moving
+		if (xVelocity == 0 && yVelocity == 0) {
 
-	// If SPACE is pressed, set the ball's x and y velocities to the specified
-	// values
-	public void keyPressed(KeyEvent e, int xV, int yV) {
-		if (e.getKeyCode() == KeyEvent.VK_SPACE && xVelocity == 0 && yVelocity == 0) {
-			xVelocity = xV;
-			yVelocity = yV;
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				xVelocity = 0;
+				yVelocity = 8;
+
+				
+
+			}
 		}
+
 	}
 
-	// Set the ball's x velocity to the specified value, and let the ball move
-	public void setXDirection(int xDirection) {
-		xVelocity = xDirection;
-		move();
-	}
-
-	// Set the ball's y velocity to the specified value, and let the ball move
+	// called when movement of the ball changes in the y-direction
 	public void setYDirection(int yDirection) {
 		yVelocity = yDirection;
-		move();
 	}
 
-	// called frequently from the GamePanel class
-	// updates the current location of the ball
+	// called when movement of the ball changes in the x-direction
+	public void setXDirection(int xDirection) {
+		xVelocity = xDirection;
+	}
+
+	// position of ball updated according to velocity
 	public void move() {
-		x = x + xVelocity;
 		y = y + yVelocity;
+		x = x + xVelocity;
 	}
 
-	// reset the position of the ball to the specified location
-	// and make the ball stationary
-	public void reset(int x, int y) {
-		this.x = x;
-		this.y = y;
-		xVelocity = 0;
-		yVelocity = 0;
-	}
-
-	// called frequently from the GamePanel class
-	// draws the current location of the ball to the screen
+	// appearance and position of ball
 	public void draw(Graphics g) {
 		g.setColor(Color.white);
-		g.fillOval(x, y, DIAMETER, DIAMETER);
+		g.fillOval(x, y, size, size);
 	}
+
 }
