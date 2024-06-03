@@ -1,4 +1,5 @@
 
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -6,169 +7,143 @@ import javax.swing.*;
 public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// dimensions of window
-	public static final int GAME_WIDTH = 800;
-	public static final int GAME_HEIGHT = 500;
+	public static final int GAME_WIDTH = 1000;
+	public static final int GAME_HEIGHT = GAME_WIDTH * 2 / 3;
+	public boolean instructions = true;
 
-	// Objects used in the game
-	private Thread gameThread;
-	private Image image;
-	private Graphics graphics;
-	private Paddle paddleOne, paddleTwo;
-	private Ball ball;
-	private Sound sound;
+	public Thread gameThread;
+	public Image image;
+	public Graphics graphics;
+	public Paddle paddle1;
+	public Ball ball;
 
-	// Stores if the game has started and ended, respectively
-	private boolean started = false, ended = false;
-
-	// Stores the time when the game starts and ends, respectively
-	private long gameStartTime = Long.MAX_VALUE, gameEndTime;
-
-	// Constructor creates objects and sets properties used in the game
 	public GamePanel() {
-		
 
-		// Additional properties for the game panel
+		// creating two paddles on either ends of the window
+		paddle1 = new Paddle(0, GAME_HEIGHT - Paddle.HEIGHT);
+
+		ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, GAME_HEIGHT / 2 - Ball.size / 2);
+	
+
 		this.setFocusable(true);
-		this.addKeyListener(this);
+		this.addKeyListener(this); // start listening for keyboard input
+
 		this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 
-		// Make this class run at the same time as other classes
+		// creating threads to run things simultaneously
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
 
-	// Update what appears in the game window using double buffering
 	public void paint(Graphics g) {
+		// images drawn off screen and moved on screen to prevent lag visible to humans
 		image = createImage(GAME_WIDTH, GAME_HEIGHT);
 		graphics = image.getGraphics();
 		draw(graphics);
 		g.drawImage(image, 0, 0, this);
+
 	}
 
-	// call the needed draw and display methods to update positions and text as
-	// things
-	// move
-	private void draw(Graphics g) {
-		
+	// calling all draw methods for all objects to be displayed
+	public void draw(Graphics g) {
+		paddle1.draw(g);
+		ball.draw(g);
+	
+		// instructions are displayed until space bar is hit at the start
+		if (instructions) {
+
+			g.setColor(Color.white);
+			g.setFont(new Font("Consolas", Font.PLAIN, 20));
+			g.drawString("Press spacebar to start! Knock out all of the blocks!", GAME_WIDTH * 1 / 4, GAME_HEIGHT * 6 / 7);
+
+		}
+
+	
+	
+
 	}
 
-
-	// call the move methods in other classes to update positions
-	private void move() {
-		paddleOne.move();
-		paddleTwo.move();
+	// positions of all moving objects constantly updated
+	public void move() {
+		paddle1.move();
 		ball.move();
+
 	}
 
 	// handles all collision detection and responds accordingly
-	private void checkCollision() {
+	public void checkCollision() {
 
-		// force paddles to remain on screen
-		if (paddleOne.y <= 0) {
-			paddleOne.y = 0;
+		// keep paddle 1 on screen
+		if (paddle1.x <= 0) {
+			paddle1.x = 0;
 		}
-		if (paddleOne.y >= GAME_HEIGHT - Paddle.LENGTH) {
-			paddleOne.y = GAME_HEIGHT - Paddle.LENGTH;
-		}
-		if (paddleTwo.y <= 0) {
-			paddleTwo.y = 0;
-		}
-		if (paddleTwo.y >= GAME_HEIGHT - Paddle.LENGTH) {
-			paddleTwo.y = GAME_HEIGHT - Paddle.LENGTH;
+		if (paddle1.x >= GAME_WIDTH - Paddle.WIDTH) {
+			paddle1.x = GAME_WIDTH - Paddle.WIDTH;
 		}
 
-		// forces the game ball to remain on screen
-		// makes the ball bounce off the top and bottom edges of the panel
-		// and plays the corresponding bouncing sound effect
+
+		
+		// ball bounce off top edge
 		if (ball.y <= 0) {
 			ball.y = 0;
-			ball.setYDirection(-ball.getYVelocity());
+			ball.setYDirection(-ball.yVelocity);
 		}
-		if (ball.y >= GAME_HEIGHT - Ball.BALL_DIAMETER) {
-			ball.y = GAME_HEIGHT - Ball.BALL_DIAMETER;
-			ball.setYDirection(-ball.getYVelocity());
-		}
-
-		// The right player scores a point if the ball goes off the left edge of the
-		// panel
-		// Reset the positions of the ball and the paddles to their starting positions
-		// Play the corresponding sound effect for winning a point
-		if (ball.x <= 0) {
-			ball.reset((GAME_WIDTH - Ball.BALL_DIAMETER) / 2, (GAME_HEIGHT - Ball.BALL_DIAMETER) / 2);
-			paddleOne.reset(GAME_WIDTH / 8, (GAME_HEIGHT - Paddle.LENGTH + Ball.BALL_DIAMETER) / 2);
-			paddleTwo.reset(7 * GAME_WIDTH / 8, (GAME_HEIGHT - Paddle.LENGTH + Ball.BALL_DIAMETER) / 2);
-
-		}
-
-		// The left player scores a point if the ball goes off the right edge of the
-		// panel
-		// Reset the positions of the ball and the paddles to their starting positions
-		// Play the corresponding sound effect for winning a point
-		if (ball.x >= GAME_WIDTH - Ball.BALL_DIAMETER) {
-			ball.reset((GAME_WIDTH - Ball.BALL_DIAMETER) / 2, (GAME_HEIGHT - Ball.BALL_DIAMETER) / 2);
-			paddleOne.reset(GAME_WIDTH / 8, (GAME_HEIGHT - Paddle.LENGTH + Ball.BALL_DIAMETER) / 2);
-			paddleTwo.reset(7 * GAME_WIDTH / 8, (GAME_HEIGHT - Paddle.LENGTH + Ball.BALL_DIAMETER) / 2);
-
-		}
-
-		// makes the ball bounce off the paddles
-		// and play the bouncing sound effect
-		if (paddleOne.intersects(ball)) {
-
-			ball.setXDirection(Ball.SPEED);
-
-			// Steadily increases the magnitude of the ball's y velocity
-			// Randomly stays the same or increases by 1
-			// So the game becomes increasingly harder over time
-			if (ball.getYVelocity() >= 1) {
-				ball.setYDirection((int) (2 * Math.random()) + ball.getYVelocity());
-			} else if (ball.getYVelocity() <= -1) {
-				ball.setYDirection((int) (-2 * Math.random()) + ball.getYVelocity());
-			}
-
-			// If the ball's y velocity is 0
-			// It will randomly become -1, 0 or 1
-			else {
-				ball.setYDirection((int) (3 * Math.random()) - 1);
-			}
-
-		}
-		if (paddleTwo.intersects(ball)) {
-
-			ball.setXDirection(-Ball.SPEED);
-
-			// Steadily increases the magnitude of the ball's y velocity
-			// Randomly stays the same or increases by 1
-			// So the game becomes increasingly harder over time
-			if (ball.getYVelocity() >= 1) {
-				ball.setYDirection((int) (2 * Math.random()) + ball.getYVelocity());
-			} else if (ball.getYVelocity() <= -1) {
-				ball.setYDirection((int) (-2 * Math.random()) + ball.getYVelocity());
-			}
-
-			// If the ball's y velocity is 0
-			// It will randomly become -1, 0 or 1
-			else {
-				ball.setYDirection((int) (3 * Math.random()) - 1);
-			}
-
-		}
-	}
-
-	// check if the game has ended
-	private void checkGameEnd() {
 		
+		if (ball.x <= 0) {
+			ball.x = 0;
+			ball.setXDirection(-ball.xVelocity);
+		}
+		
+		if (ball.x >= GAME_WIDTH) {
+			ball.x = GAME_WIDTH - Ball.size;
+			ball.setXDirection(-ball.xVelocity);
+		}
+
+
+
+		
+
+		if (ball.intersects(paddle1)) {
+			ball.y = GAME_HEIGHT - Paddle.HEIGHT - Ball.size; // prevent ball from bugging
+			ball.setYDirection(-ball.yVelocity); // to bounce back
+			
+			// random y velocity ranging from -9 to 9
+			ball.setXDirection((int) (Math.random() * 19) - 9);
+
+			// make bounces logical and realistic
+			// if ball hits paddle from top, should bounce off towards bottom
+
+		}
+
+
+
+		// if ball hits bottom edge
+		if (ball.y >= GAME_HEIGHT) {
+	
+			paddle1 = new Paddle(0, GAME_HEIGHT - Paddle.HEIGHT);
+			ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, GAME_HEIGHT / 2 - Ball.size / 2);
+			
+
+		}	
+
 	}
 
-	// makes the game continue running without end, at 60 frames per second
+	// runs and calls other methods continually
 	public void run() {
+
+		// following lines of code "force" computer to get stuck in a loop for short
+		// intervals between calling other methods to update screen.
 		long lastTime = System.nanoTime();
 		double amountOfTicks = 60;
 		double ns = 1000000000 / amountOfTicks;
 		double delta = 0;
 		long now;
 
+		// running background music
+		Music.RunMusic("Res/music.wav");
+
 		while (true) { // this is the infinite game loop
+
 			now = System.nanoTime();
 			delta = delta + (now - lastTime) / ns;
 			lastTime = now;
@@ -177,27 +152,34 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			if (delta >= 1) {
 				move();
 				checkCollision();
-				checkGameEnd();
 				repaint();
 				delta--;
 			}
 		}
 	}
 
-	// if a key is pressed, send it over to the corresponding classes for processing
+	// calls all keyPressed methods for objects if pressing of key is detected for
+	// further action
 	public void keyPressed(KeyEvent e) {
 
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+			instructions = false; // stop showing instructions after hitting space bar
 
+		
+		}
+
+		paddle1.keyPressed(e);
+		ball.keyPressed(e);
 	}
 
-	// if a key is released, we'll send it over to the paddles for processing
+	// calls all keyReleased methods for objects if release of key is detected for
+	// further action
 	public void keyReleased(KeyEvent e) {
-		paddleOne.keyReleased(e);
-		paddleTwo.keyReleased(e);
+		paddle1.keyReleased(e);
 	}
 
-	// must be here because it is required to
-	// be overridden by the KeyListener interface
+	// left empty as not needed
+	// here as required to be overrode by KeyListener interface
 	public void keyTyped(KeyEvent e) {
 
 	}
