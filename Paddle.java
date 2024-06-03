@@ -64,11 +64,10 @@ public class Paddle extends Rectangle {
 	// left paddle appears blue and right paddle appears red
 	public void draw(Graphics g) {
 		
-			g.setColor(Color.blue);
-	
-
+		g.setColor(Color.white);
 		g.fillRect(x, y, WIDTH, HEIGHT);
 
 	}
 
 }
+
