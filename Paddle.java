@@ -13,6 +13,7 @@ public class Paddle extends Rectangle {
 	public final int SPEED = 8; // speed of paddle
 	public static final int HEIGHT = 5, WIDTH = GamePanel.GAME_WIDTH / 10; // dimensions of paddle
 
+	// constructor creates paddle at given location with given dimensions
 	public Paddle(int x, int y) {
 		super(x, y, WIDTH, HEIGHT);
 
@@ -60,7 +61,7 @@ public class Paddle extends Rectangle {
 	}
 
 	// paddle appearance
-	// blue in color
+	// white in color
 	public void draw(Graphics g) {
 
 		g.setColor(Color.blue);
