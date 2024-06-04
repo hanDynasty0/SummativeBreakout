@@ -144,7 +144,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			
 			// let the ball bounce in a certain direction depending on where it hits the paddle
 			// with a random variance of +-1
-			ball.setXDirection((ballX - paddleX)/10 + (int)(3*Math.random()) - 1);
+			ball.setXDirection((ballX - paddleX)/7 + (int)(3*Math.random()) - 1);
 
 			// makes ball bounces controllable by the player
 
