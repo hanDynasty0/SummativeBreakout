@@ -18,6 +18,8 @@ public class Ball extends Rectangle {
 	// constructor creates a stationary ball at given location with given dimensions
 	public Ball(int x, int y) {
 		super(x, y, size, size);
+		xVelocity = 0;
+		yVelocity = 0;
 	}
 
 	
