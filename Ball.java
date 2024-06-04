@@ -1,4 +1,8 @@
-
+/* 
+ * Author: Han Fang and Hazel Bains
+ * Date: June 4
+ * Description: Ball class manages the display, position and velocity of the ball
+ */
 
 
 
@@ -21,6 +25,7 @@ public class Ball extends Rectangle {
 		// if ball is not moving
 		if (xVelocity == 0 && yVelocity == 0) {
 
+			//when space bar is hit, drop ball
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				xVelocity = 0;
 				yVelocity = 8;
@@ -32,12 +37,12 @@ public class Ball extends Rectangle {
 
 	}
 
-	// called when movement of the ball changes in the y-direction
+	// called when movement of ball changes in the y-direction
 	public void setYDirection(int yDirection) {
 		yVelocity = yDirection;
 	}
 
-	// called when movement of the ball changes in the x-direction
+	// called when movement of ball changes in the x-direction
 	public void setXDirection(int xDirection) {
 		xVelocity = xDirection;
 	}
