@@ -1,9 +1,8 @@
 /* 
- * Author: Hazel Bains
- * Date: May 21
- * Description: GameFrame creates frame for running game
+ * Author: Han Fang and Hazel Bains
+ * Date: June 4
+ * Description: GameFrame creates frame for game when run
  */
-
 import java.awt.*;
 import javax.swing.*;
 
