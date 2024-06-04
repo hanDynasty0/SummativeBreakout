@@ -1,11 +1,11 @@
 /* 
  * Author: Han Fang and Hazel Bains
  * Date: June 4
- * Description: GamePanel class continually loops the game and implements other methods and classes 
- * Main class where everything is called and works together
+ * Description: GamePanel class acts as the main "game loop" - continuously runs the game and calls whatever needs to be called
  */
 
 import java.awt.*;
+import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
 
@@ -21,14 +21,36 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public Graphics graphics;
 	public Paddle paddle;
 	public Ball ball;
+	
+	public ArrayList<Brick> curBricks;
 
 	public GamePanel() {
 
-		// creating paddle at bottom of screen
+		// creating paddle near the bottom of screen
 		paddle = new Paddle((GAME_WIDTH - Paddle.WIDTH)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
 
+		// creating ball near the bottom of screen
 		ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, 3*GAME_HEIGHT/4 - Ball.size/2);
 	
+		// creating a list with all the bricks
+		curBricks = new ArrayList<>();
+		
+		// adding a sample of bricks to the list
+		curBricks.add(new Brick(100,100,false,Color.red));
+		curBricks.add(new Brick(300,100,false, Color.red));
+		curBricks.add(new Brick(500,100,false, Color.red));
+		curBricks.add(new Brick(700,100,false, Color.red));
+		curBricks.add(new Brick(900,100,false, Color.red));
+		curBricks.add(new Brick(0,150,false, Color.yellow));
+		curBricks.add(new Brick(200,150,false, Color.yellow));
+		curBricks.add(new Brick(400,150,false, Color.yellow));
+		curBricks.add(new Brick(600,150,false, Color.yellow));
+		curBricks.add(new Brick(800,150,false, Color.yellow));
+		curBricks.add(new Brick(100,200,false,Color.red));
+		curBricks.add(new Brick(300,200,false, Color.red));
+		curBricks.add(new Brick(500,200,false, Color.red));
+		curBricks.add(new Brick(700,200,false, Color.red));
+		curBricks.add(new Brick(900,200,false, Color.red));
 
 		this.setFocusable(true);
 		this.addKeyListener(this); // start listening for keyboard input
@@ -63,12 +85,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		}
 
-	
-	
+		// draw all bricks in the list
+		for(Brick b: curBricks) {
+			b.draw(g);
+		}
 
 	}
 
-	// positions of moving objects constantly updated
+	// positions of all moving objects constantly updated
 	public void move() {
 		paddle.move();
 		ball.move();
@@ -88,22 +112,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 
 		
-		// ball bounces off top edge
+		// ball bounce off top edge
 		if (ball.y <= 0) {
 			ball.y = 0;
 			ball.setYDirection(-ball.yVelocity);
 		}
 		
-		// ball bounces off left edge
-
+		// ball bounce off left edge
 		if (ball.x <= 0) {
 			ball.x = 0;
 			ball.setXDirection(-ball.xVelocity);
 		}
 		
-		
-		// ball bounces off right edge
-
+		// ball bounce off right edge
 		if (ball.x >= GAME_WIDTH - Ball.size) {
 			ball.x = GAME_WIDTH - Ball.size;
 			ball.setXDirection(-ball.xVelocity);
@@ -112,19 +133,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 
 		
-		//ball coming into contact with paddle
+		// ball bounces off paddle
 		if (ball.intersects(paddle)) {
-			
 			int ballX = ball.x + Ball.size/2;
 			int paddleX = paddle.x + Paddle.WIDTH/2;
-			
 			
 			ball.y = paddle.y - Ball.size;
 			ball.setYDirection(-ball.yVelocity); // to bounce back
 			
-			//ball bounces back depending on which half of paddle it hit, to aid with aiming
-			ball.setXDirection((ballX - paddleX)/4 + (int)(3*Math.random()) - 1);
-			
+			// let the ball bounce in a certain direction depending on where it hits the paddle
+			// with a random variance of +-1
+			ball.setXDirection((ballX - paddleX)/10 + (int)(3*Math.random()) - 1);
+
+			// makes ball bounces controllable by the player
 
 		}
 
@@ -133,12 +154,55 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		// if ball hits bottom edge
 		if (ball.y >= GAME_HEIGHT) {
 	
-			//reset game by creating new objects
 			paddle = new Paddle((GAME_WIDTH - Paddle.WIDTH)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
 			ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, 3*GAME_HEIGHT/4 - Ball.size/2);
 			
 
 		}	
+		
+		// ball bounces off of bricks
+		// loop through all the bricks to detect collisions
+		for(int i = 0; i < curBricks.size(); i++) {
+			
+			if(ball.intersects(curBricks.get(i))) {
+				
+				Brick b = curBricks.remove(i); // removes the brick so it is no longer drawn
+				
+				// bounce off the left or right side of the brick
+				if(ball.y - ball.yVelocity >= b.y && ball.y - ball.yVelocity <= b.y + Brick.HEIGHT) {
+					
+					// if the ball approached the brick from the right, set the ball's position to the right of the brick
+					if(ball.xVelocity < 0) {
+						ball.x = b.x + Brick.WIDTH;
+					}
+					
+					// if the ball approached the brick from the left, set the ball's position to the left of the brick
+					else {
+						ball.x = b.x - Ball.size;
+					}
+					
+					ball.setXDirection(-ball.xVelocity);
+				}
+				
+				// bounce off the top or bottom side of the brick
+				else {
+					
+					// if the ball approached the brick from the bottom, set the ball's position to the bottom of the brick
+					if(ball.yVelocity < 0) {
+						ball.y = b.y + Brick.HEIGHT;
+					}
+					
+					// if the ball approaches the brick from the top, set the ball's position to the top of the brick
+					else {
+						ball.y = b.y - Ball.size;
+					}
+					
+					ball.setYDirection(-ball.yVelocity);
+				}
+				
+				break;
+			}
+		}
 
 	}
 
