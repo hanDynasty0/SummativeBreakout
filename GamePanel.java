@@ -1,4 +1,9 @@
-
+/* 
+ * Author: Han Fang and Hazel Bains
+ * Date: June 4
+ * Description: GamePanel class continually loops the game and implements other methods and classes 
+ * Main class where everything is called and works together
+ */
 
 import java.awt.*;
 import java.awt.event.*;
@@ -19,7 +24,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	public GamePanel() {
 
-		// creating two paddles on either ends of the window
+		// creating paddle at bottom of screen
 		paddle = new Paddle((GAME_WIDTH - Paddle.WIDTH)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
 
 		ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, 3*GAME_HEIGHT/4 - Ball.size/2);
@@ -63,7 +68,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	}
 
-	// positions of all moving objects constantly updated
+	// positions of moving objects constantly updated
 	public void move() {
 		paddle.move();
 		ball.move();
@@ -73,7 +78,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// handles all collision detection and responds accordingly
 	public void checkCollision() {
 
-		// keep paddle 1 on screen
+		// keep paddle on screen
 		if (paddle.x <= 0) {
 			paddle.x = 0;
 		}
@@ -83,17 +88,22 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 
 		
-		// ball bounce off top edge
+		// ball bounces off top edge
 		if (ball.y <= 0) {
 			ball.y = 0;
 			ball.setYDirection(-ball.yVelocity);
 		}
 		
+		// ball bounces off left edge
+
 		if (ball.x <= 0) {
 			ball.x = 0;
 			ball.setXDirection(-ball.xVelocity);
 		}
 		
+		
+		// ball bounces off right edge
+
 		if (ball.x >= GAME_WIDTH - Ball.size) {
 			ball.x = GAME_WIDTH - Ball.size;
 			ball.setXDirection(-ball.xVelocity);
@@ -102,19 +112,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 
 		
-
+		//ball coming into contact with paddle
 		if (ball.intersects(paddle)) {
+			
 			int ballX = ball.x + Ball.size/2;
 			int paddleX = paddle.x + Paddle.WIDTH/2;
+			
 			
 			ball.y = paddle.y - Ball.size;
 			ball.setYDirection(-ball.yVelocity); // to bounce back
 			
-			// 
+			//ball bounces back depending on which half of paddle it hit, to aid with aiming
 			ball.setXDirection((ballX - paddleX)/4 + (int)(3*Math.random()) - 1);
-
-			// make bounces logical and realistic
-			// if ball hits paddle from top, should bounce off towards bottom
+			
 
 		}
 
@@ -123,6 +133,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		// if ball hits bottom edge
 		if (ball.y >= GAME_HEIGHT) {
 	
+			//reset game by creating new objects
 			paddle = new Paddle((GAME_WIDTH - Paddle.WIDTH)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
 			ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, 3*GAME_HEIGHT/4 - Ball.size/2);
 			
