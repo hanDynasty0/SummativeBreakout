@@ -82,7 +82,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			g.setColor(Color.white);
 			g.setFont(new Font("Consolas", Font.PLAIN, 20));
 			g.drawString("Press spacebar to start! Knock out all of the blocks!", GAME_WIDTH * 1 / 4, GAME_HEIGHT * 6 / 7);
-
+			g.drawString("Use the left and right arrow keys to move the paddle...", GAME_WIDTH * 1 / 4, GAME_HEIGHT * 25 / 28);
+			
 		}
 
 		// draw all bricks in the list
