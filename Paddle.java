@@ -64,7 +64,7 @@ public class Paddle extends Rectangle {
 	// white in color
 	public void draw(Graphics g) {
 
-		g.setColor(Color.blue);
+		g.setColor(Color.white);
 
 		g.fillRect(x, y, WIDTH, HEIGHT);
 
