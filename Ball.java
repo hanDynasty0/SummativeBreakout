@@ -15,11 +15,12 @@ public class Ball extends Rectangle {
 	public int yVelocity;
 	public int xVelocity;
 
-
+	// constructor creates a stationary ball at given location with given dimensions
 	public Ball(int x, int y) {
 		super(x, y, size, size);
 	}
 
+	
 	public void keyPressed(KeyEvent e) {
 
 		// if ball is not moving
