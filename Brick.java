@@ -7,8 +7,8 @@
 import java.awt.*;
 
 public class Brick extends Rectangle{
-	public static final int WIDTH = 100;
-	public static final int HEIGHT = 50;
+	public static final int WIDTH = 80;
+	public static final int HEIGHT = 40;
 	
 	boolean hasPowerUp;
 	
