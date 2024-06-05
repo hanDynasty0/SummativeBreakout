@@ -170,34 +170,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				Brick b = curBricks.remove(i); // removes the brick so it is no longer drawn
 				
 				// bounce off the left or right side of the brick
-				if(ball.y - ball.yVelocity >= b.y && ball.y - ball.yVelocity <= b.y + Brick.HEIGHT) {
-					
-					// if the ball approached the brick from the right, set the ball's position to the right of the brick
-					if(ball.xVelocity < 0) {
-						ball.x = b.x + Brick.WIDTH;
-					}
-					
-					// if the ball approached the brick from the left, set the ball's position to the left of the brick
-					else {
-						ball.x = b.x - Ball.size;
-					}
-					
+				if(ball.y + Ball.size - ball.yVelocity >= b.y && ball.y - ball.yVelocity <= b.y + Brick.HEIGHT) {
 					ball.setXDirection(-ball.xVelocity);
 				}
 				
 				// bounce off the top or bottom side of the brick
 				else {
-					
-					// if the ball approached the brick from the bottom, set the ball's position to the bottom of the brick
-					if(ball.yVelocity < 0) {
-						ball.y = b.y + Brick.HEIGHT;
-					}
-					
-					// if the ball approaches the brick from the top, set the ball's position to the top of the brick
-					else {
-						ball.y = b.y - Ball.size;
-					}
-					
 					ball.setYDirection(-ball.yVelocity);
 				}
 				
