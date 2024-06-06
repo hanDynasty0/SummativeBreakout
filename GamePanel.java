@@ -23,6 +23,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public Ball ball;
 	
 	public ArrayList<Brick> curBricks;
+	public ArrayList<PowerUp> powerUps;
 
 	public GamePanel() {
 
@@ -32,24 +33,27 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		// creating ball near the bottom of screen
 		ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, 3*GAME_HEIGHT/4 - Ball.size/2);
 	
+		// creating a list with all the power ups
+		powerUps = new ArrayList<>();
+		
 		// creating a list with all the bricks
 		curBricks = new ArrayList<>();
 		
 		// adding a sample of bricks to the list
-		curBricks.add(new Brick(100,100,false,Color.red));
+		curBricks.add(new Brick(100,100,true,Color.red));
 		curBricks.add(new Brick(300,100,false, Color.red));
 		curBricks.add(new Brick(500,100,false, Color.red));
-		curBricks.add(new Brick(700,100,false, Color.red));
+		curBricks.add(new Brick(700,100,true, Color.red));
 		curBricks.add(new Brick(900,100,false, Color.red));
 		curBricks.add(new Brick(0,150,false, Color.yellow));
 		curBricks.add(new Brick(200,150,false, Color.yellow));
 		curBricks.add(new Brick(400,150,false, Color.yellow));
-		curBricks.add(new Brick(600,150,false, Color.yellow));
+		curBricks.add(new Brick(600,150,true, Color.yellow));
 		curBricks.add(new Brick(800,150,false, Color.yellow));
 		curBricks.add(new Brick(100,200,false,Color.red));
-		curBricks.add(new Brick(300,200,false, Color.red));
+		curBricks.add(new Brick(300,200,true, Color.red));
 		curBricks.add(new Brick(500,200,false, Color.red));
-		curBricks.add(new Brick(700,200,false, Color.red));
+		curBricks.add(new Brick(700,200,true, Color.red));
 		curBricks.add(new Brick(900,200,false, Color.red));
 
 		this.setFocusable(true);
@@ -83,12 +87,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			g.setFont(new Font("Consolas", Font.PLAIN, 20));
 			g.drawString("Press spacebar to start! Knock out all of the blocks!", GAME_WIDTH * 1 / 4, GAME_HEIGHT * 6 / 7);
 			g.drawString("Use the left and right arrow keys to move the paddle...", GAME_WIDTH * 1 / 4, GAME_HEIGHT * 25 / 28);
-			
+
 		}
 
 		// draw all bricks in the list
 		for(Brick b: curBricks) {
 			b.draw(g);
+		}
+		
+		// draw all power ups in the list
+		for(PowerUp p: powerUps) {
+			p.draw(g);
 		}
 
 	}
@@ -97,7 +106,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public void move() {
 		paddle.move();
 		ball.move();
-
+		
+		// move all power ups
+		for(PowerUp p: powerUps) {
+			p.move();
+		}
 	}
 
 	// handles all collision detection and responds accordingly
@@ -169,20 +182,34 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				
 				Brick b = curBricks.remove(i); // removes the brick so it is no longer drawn
 				
+				// spawn a power up if the broken brick contains one
+				if(b.hasPowerUp) {
+					powerUps.add(new PowerUp(b.x, b.y));
+				}
+				
 				// bounce off the left or right side of the brick
 				if(ball.y + Ball.size/2 - ball.yVelocity >= b.y && ball.y + Ball.size/2 - ball.yVelocity <= b.y + Brick.HEIGHT) {
+					
 					ball.setXDirection(-ball.xVelocity);
 				}
 				
 				// bounce off the top or bottom side of the brick
 				else {
+					
 					ball.setYDirection(-ball.yVelocity);
 				}
 				
 				break;
 			}
 		}
-
+		
+		// remove the power up from the list if it falls off the screen
+		for(int i = 0; i < powerUps.size(); i++) {
+			if(powerUps.get(i).y >= GAME_HEIGHT) {
+				powerUps.remove(i);
+				break;
+			}
+		}
 	}
 
 	// runs and calls other methods continually
