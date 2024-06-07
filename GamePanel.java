@@ -39,23 +39,70 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		// creating a list with all the bricks
 		curBricks = new ArrayList<>();
 		
+		
 		// adding a sample of bricks to the list
-		curBricks.add(new Brick(100,100,true,Color.red));
+		/*curBricks.add(new Brick(100,100,false,Color.red));
 		curBricks.add(new Brick(300,100,false, Color.red));
 		curBricks.add(new Brick(500,100,false, Color.red));
-		curBricks.add(new Brick(700,100,true, Color.red));
+		curBricks.add(new Brick(700,100,false, Color.red));
 		curBricks.add(new Brick(900,100,false, Color.red));
 		curBricks.add(new Brick(0,150,false, Color.yellow));
 		curBricks.add(new Brick(200,150,false, Color.yellow));
 		curBricks.add(new Brick(400,150,false, Color.yellow));
-		curBricks.add(new Brick(600,150,true, Color.yellow));
+		curBricks.add(new Brick(600,150,false, Color.yellow));
 		curBricks.add(new Brick(800,150,false, Color.yellow));
 		curBricks.add(new Brick(100,200,false,Color.red));
-		curBricks.add(new Brick(300,200,true, Color.red));
+		curBricks.add(new Brick(300,200,false, Color.red));
 		curBricks.add(new Brick(500,200,false, Color.red));
-		curBricks.add(new Brick(700,200,true, Color.red));
+		curBricks.add(new Brick(700,200,false, Color.red));
 		curBricks.add(new Brick(900,200,false, Color.red));
+		*/
 
+		curBricks.add(new Brick(500,100,false, Color.cyan));
+		curBricks.add(new Brick(415,100,false, Color.cyan));
+		curBricks.add(new Brick(545,145,false, Color.cyan));
+		curBricks.add(new Brick(460,145,false, Color.magenta));
+		curBricks.add(new Brick(375,145,false, Color.cyan));
+		curBricks.add(new Brick(500,190,false, Color.magenta));
+		curBricks.add(new Brick(415,190,false, Color.magenta));
+		curBricks.add(new Brick(330,190,false, Color.cyan));
+		curBricks.add(new Brick(585,190,false, Color.cyan));
+		curBricks.add(new Brick(545,235,false, Color.cyan));
+		curBricks.add(new Brick(460,235,false, Color.magenta));
+		curBricks.add(new Brick(375,235,false, Color.cyan));
+		curBricks.add(new Brick(500,280,false, Color.cyan));
+		curBricks.add(new Brick(415,280,false, Color.cyan));
+		
+		curBricks.add(new Brick(700,100,false, Color.magenta));
+		curBricks.add(new Brick(785,100,false, Color.magenta));
+		curBricks.add(new Brick(870,100,false, Color.magenta));
+		curBricks.add(new Brick(915,145,false, Color.cyan));
+		curBricks.add(new Brick(830,145,false, Color.cyan));
+		curBricks.add(new Brick(745,145,false, Color.cyan));
+		curBricks.add(new Brick(785,190,false, Color.magenta));
+		curBricks.add(new Brick(870,190,false, Color.magenta));
+		curBricks.add(new Brick(830,235,false, Color.cyan));
+		curBricks.add(new Brick(915,235,false, Color.cyan));
+		curBricks.add(new Brick(745,235,false, Color.cyan));
+		curBricks.add(new Brick(700,280,false, Color.magenta));
+		curBricks.add(new Brick(785,280,false, Color.magenta));
+		curBricks.add(new Brick(870,280,false, Color.magenta));
+
+	
+		curBricks.add(new Brick(215,100,false, Color.cyan));
+		curBricks.add(new Brick(130,100,false, Color.cyan));
+		curBricks.add(new Brick(45,100,false, Color.cyan));
+		curBricks.add(new Brick(175,145,false, Color.magenta));
+		curBricks.add(new Brick(90,145,false, Color.magenta));
+		curBricks.add(new Brick(5,145,false, Color.magenta));
+		curBricks.add(new Brick(130,190,false, Color.cyan));
+		curBricks.add(new Brick(45,190,false, Color.cyan));
+		curBricks.add(new Brick(175,235,false, Color.magenta));
+		curBricks.add(new Brick(90,235,false, Color.magenta));
+		curBricks.add(new Brick(5,235,false, Color.magenta));
+		curBricks.add(new Brick(215,280,false, Color.cyan));
+		curBricks.add(new Brick(130,280,false, Color.cyan));
+		curBricks.add(new Brick(45,280,false, Color.cyan));
 		this.setFocusable(true);
 		this.addKeyListener(this); // start listening for keyboard input
 
