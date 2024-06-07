@@ -165,7 +165,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 
 
-		// if ball hits bottom edge
+		// if ball passes bottom edge
 		if (ball.y >= GAME_HEIGHT) {
 	
 			paddle = new Paddle((GAME_WIDTH - Paddle.WIDTH)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
