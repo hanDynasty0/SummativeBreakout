@@ -218,11 +218,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				break;
 			}
 		}
-
-		// remove all power ups if the player misses the ball
-		if(ball.xVelocity == 0 && ball.yVelocity == 0) {
-			powerUps.clear();
-		}
 	}
 
 	// runs and calls other methods continually
