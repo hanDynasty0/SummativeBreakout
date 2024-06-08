@@ -15,11 +15,14 @@ public class Ball extends Rectangle {
 	public int yVelocity;
 	public int xVelocity;
 
+	public Color color;
+
 	// constructor creates a stationary ball at given location with given dimensions
 	public Ball(int x, int y) {
 		super(x, y, size, size);
 		xVelocity = 0;
 		yVelocity = 0;
+		color = Color.white;
 	}
 
 	
@@ -58,7 +61,7 @@ public class Ball extends Rectangle {
 
 	// appearance and position of ball
 	public void draw(Graphics g) {
-		g.setColor(Color.white);
+		g.setColor(color);
 		g.fillOval(x, y, size, size);
 	}
 
