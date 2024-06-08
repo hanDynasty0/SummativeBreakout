@@ -7,7 +7,7 @@
 import java.awt.*;
 
 public class PowerUp extends Rectangle{
-	public static final Color COLORS[] = {Color.yellow, Color.lightGray, Color.pink, Color.darkGray, Color.white};
+	public static final Color COLORS[] = {Color.yellow, Color.white};
 	
 	public static final int WIDTH = 40;
 	public static final int HEIGHT = 20;
@@ -18,7 +18,7 @@ public class PowerUp extends Rectangle{
 	public PowerUp(int x, int y) {
 		super(x, y, WIDTH, HEIGHT);
 		
-		color = COLORS[(int)(5*Math.random())];
+		color = COLORS[(int)((COLORS.length)*Math.random())];
 	}
 	
 	public void move() {
