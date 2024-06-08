@@ -11,20 +11,21 @@ public class Paddle extends Rectangle {
 
 	public int xVelocity;
 	public final int SPEED = 8; // speed of paddle
-	public static final int HEIGHT = 5, WIDTH = GamePanel.GAME_WIDTH / 10; // dimensions of paddle
-
+	public static int width = GamePanel.GAME_WIDTH / 10;
+	public static final int HEIGHT = 5; // dimensions of paddle
+	
 	// constructor creates paddle at given location with given dimensions
 	public Paddle(int x, int y) {
-		super(x, y, WIDTH, HEIGHT);
+		super(x, y, width, HEIGHT);
 
 	}
-
+	
 	public void setWidth(int wid) {
 		x -= (wid-width)/2;
 		super.width=wid;
 		width = wid;
 	}
-	
+
 	// checks for specific key input for paddle
 	public void keyPressed(KeyEvent e) {
 
@@ -71,8 +72,7 @@ public class Paddle extends Rectangle {
 	public void draw(Graphics g) {
 
 		g.setColor(Color.white);
-
-		g.fillRect(x, y, WIDTH, HEIGHT);
+		g.fillRect(x, y, width, HEIGHT);
 
 	}
 
