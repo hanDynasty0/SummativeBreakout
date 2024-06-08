@@ -172,8 +172,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		if (paddle.x <= 0) {
 			paddle.x = 0;
 		}
-		if (paddle.x >= GAME_WIDTH - Paddle.WIDTH) {
-			paddle.x = GAME_WIDTH - Paddle.WIDTH;
+		if (paddle.x >= GAME_WIDTH - Paddle.width) {
+			paddle.x = GAME_WIDTH - Paddle.width;
 		}
 
 
@@ -202,7 +202,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		// ball bounces off paddle
 		if (ball.intersects(paddle)) {
 			int ballX = ball.x + Ball.size/2;
-			int paddleX = paddle.x + Paddle.WIDTH/2;
+			int paddleX = paddle.x + Paddle.width/2;
 			
 			ball.y = paddle.y - Ball.size;
 			ball.setYDirection(-ball.yVelocity); // to bounce back
@@ -220,10 +220,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		// if ball passes bottom edge
 		if (ball.y >= GAME_HEIGHT) {
 	
-			paddle = new Paddle((GAME_WIDTH - Paddle.WIDTH)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
+			paddle = new Paddle((GAME_WIDTH - Paddle.width)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
 			ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, 3*GAME_HEIGHT/4 - Ball.size/2);
 			
 			powerUps.clear();
+			runThru = false;
+			paddle.setWidth(GAME_WIDTH/10);
 		}	
 		
 		// ball bounces off of bricks
@@ -240,13 +242,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 				
 				// bounce off the left or right side of the brick
-				if(ball.y + Ball.size/2 - ball.yVelocity >= b.y && ball.y + Ball.size/2 - ball.yVelocity <= b.y + Brick.HEIGHT) {
+				if(!runThru && ball.y + Ball.size/2 - ball.yVelocity >= b.y && ball.y + Ball.size/2 - ball.yVelocity <= b.y + Brick.HEIGHT) {
 					
 					ball.setXDirection(-ball.xVelocity);
 				}
 				
 				// bounce off the top or bottom side of the brick
-				else {
+				else if (!runThru){
 					
 					ball.setYDirection(-ball.yVelocity);
 				}
