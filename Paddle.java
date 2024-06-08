@@ -19,6 +19,12 @@ public class Paddle extends Rectangle {
 
 	}
 
+	public void setWidth(int wid) {
+		x -= (wid-width)/2;
+		super.width=wid;
+		width = wid;
+	}
+	
 	// checks for specific key input for paddle
 	public void keyPressed(KeyEvent e) {
 
