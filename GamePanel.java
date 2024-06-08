@@ -254,9 +254,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		for(int i = 0; i < powerUps.size(); i++) {
 			if(powerUps.get(i).intersects(paddle)) {
 				PowerUp p = powerUps.remove(i);
+				if(p.color == Color.yellow) {
+					runThru = true;
+					ball.color = Color.yellow;
+					paddle.setWidth(GAME_WIDTH/10);
+					
+				}
+				else if(p.color == Color.white) {
+					runThru = false;
+					ball.color = Color.white;
+					paddle.setWidth(GAME_WIDTH/7);
+				}
 				break;
 			}
-		}
+		}	
 		
 		// remove the power up from the list if it falls off the screen
 		for(int i = 0; i < powerUps.size(); i++) {
