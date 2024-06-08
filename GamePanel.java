@@ -25,6 +25,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public ArrayList<Brick> curBricks;
 	public ArrayList<PowerUp> powerUps;
 
+	public boolean runThru;
+
 	public GamePanel() {
 
 		// creating paddle near the bottom of screen
@@ -103,6 +105,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		curBricks.add(new Brick(215,280,false, Color.cyan));
 		curBricks.add(new Brick(130,280,false, Color.cyan));
 		curBricks.add(new Brick(45,280,false, Color.cyan));
+
+		runThru = false;
+		
 		this.setFocusable(true);
 		this.addKeyListener(this); // start listening for keyboard input
 
