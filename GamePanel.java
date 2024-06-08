@@ -132,6 +132,35 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		curBricks.add(new Brick(45,280,false, Color.cyan)); */
 
 		
+		//level 3
+		curBricks.add(new Brick(115,55,false,Color.blue));
+		curBricks.add(new Brick(200,100,false,Color.cyan));
+		curBricks.add(new Brick(285,145,true, Color.cyan));
+		curBricks.add(new Brick(370,190,false, Color.magenta));
+		curBricks.add(new Brick(415,235,false,Color.magenta));
+		curBricks.add(new Brick(500,235,false,Color.magenta));
+		curBricks.add(new Brick(545,190,false,Color.magenta));
+		curBricks.add(new Brick(630,145,false,Color.cyan));
+		curBricks.add(new Brick(715,100,false,Color.cyan));
+		curBricks.add(new Brick(800,55,false,Color.blue));
+
+
+		curBricks.add(new Brick(500,280,true,Color.magenta));
+		curBricks.add(new Brick(415,280,false,Color.magenta));
+		curBricks.add(new Brick(370,325,false,Color.magenta));
+		curBricks.add(new Brick(285,370,false,Color.cyan));
+		curBricks.add(new Brick(200,415,false,Color.cyan));
+		curBricks.add(new Brick(115,460,true,Color.blue));
+
+
+		curBricks.add(new Brick(545,325,false,Color.magenta));
+		curBricks.add(new Brick(630,370,false,Color.cyan));
+		curBricks.add(new Brick(715,415,false,Color.cyan));
+		curBricks.add(new Brick(800,460,true,Color.blue));
+
+		
+		
+		
 		runThru = false;
 		
 		this.setFocusable(true);
