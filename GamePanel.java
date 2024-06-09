@@ -235,7 +235,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			paddle.x = GAME_WIDTH - Paddle.width;
 		}
 
-
+		if(ball.yVelocity == 0 && ball.x <= (Paddle.width-Ball.SIZE)/2) {
+			ball.x = (Paddle.width-Ball.SIZE)/2;
+		}
+		
+		if(ball.yVelocity == 0 && ball.x >= GAME_WIDTH - (Paddle.width+Ball.SIZE)/2) {
+			ball.x = GAME_WIDTH - (Paddle.width+Ball.SIZE)/2;
+		}
 		
 		// ball bounce off top edge
 		if (ball.y <= 0) {
