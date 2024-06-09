@@ -34,8 +34,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		// creating paddle near the bottom of screen
 		paddle = new Paddle((GAME_WIDTH - Paddle.width)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
 
-		// creating ball near the bottom of screen
-		ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, 3*GAME_HEIGHT/4 - Ball.SIZE/2);
+		// creating ball on the paddle
+		ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, paddle.y-Ball.SIZE);
 	
 		// creating a list with all the power ups
 		powerUps = new ArrayList<>();
@@ -289,7 +289,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			resetPowerUps();
 	
 			paddle = new Paddle((GAME_WIDTH - Paddle.width)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
-			ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, 3*GAME_HEIGHT/4 - Ball.SIZE/2);
+			ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, paddle.y-Ball.SIZE);
 			
 		}	
 		
@@ -427,6 +427,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// further action
 	public void keyReleased(KeyEvent e) {
 		paddle.keyReleased(e);
+		ball.keyReleased(e);
 	}
 
 	// left empty as not needed
