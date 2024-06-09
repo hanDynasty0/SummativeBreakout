@@ -338,7 +338,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 				else if(p.color == Color.pink) {
 					resetPowerUps();
-					
+					ball.color = Color.pink;
 					if(Math.abs(ball.yVelocity) == Ball.Y_SPEED) {
 						ball.setXDirection(3*ball.xVelocity/4);
 					}
