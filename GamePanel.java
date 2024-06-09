@@ -33,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		paddle = new Paddle((GAME_WIDTH - Paddle.width)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
 
 		// creating ball near the bottom of screen
-		ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, 3*GAME_HEIGHT/4 - Ball.size/2);
+		ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, 3*GAME_HEIGHT/4 - Ball.SIZE/2);
 	
 		// creating a list with all the power ups
 		powerUps = new ArrayList<>();
@@ -246,8 +246,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		}
 		
 		// ball bounce off right edge
-		if (ball.x >= GAME_WIDTH - Ball.size) {
-			ball.x = GAME_WIDTH - Ball.size;
+		if (ball.x >= GAME_WIDTH - Ball.SIZE) {
+			ball.x = GAME_WIDTH - Ball.SIZE;
 			ball.setXDirection(-ball.xVelocity);
 		}
 
@@ -256,10 +256,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		
 		// ball bounces off paddle
 		if (ball.intersects(paddle)) {
-			int ballX = ball.x + Ball.size/2;
+			int ballX = ball.x + Ball.SIZE/2;
 			int paddleX = paddle.x + Paddle.width/2;
 			
-			ball.y = paddle.y - Ball.size;
+			ball.y = paddle.y - Ball.SIZE;
 			ball.setYDirection(-ball.yVelocity); // to bounce back
 			
 			// let the ball bounce in a certain direction depending on where it hits the paddle
@@ -279,7 +279,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			resetPowerUps();
 	
 			paddle = new Paddle((GAME_WIDTH - Paddle.width)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
-			ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, 3*GAME_HEIGHT/4 - Ball.size/2);
+			ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, 3*GAME_HEIGHT/4 - Ball.SIZE/2);
 			
 		}	
 		
@@ -297,7 +297,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 				
 				// bounce off the left or right side of the brick
-				if(!runThru && ball.y + Ball.size/2 - ball.yVelocity >= b.y && ball.y + Ball.size/2 - ball.yVelocity <= b.y + Brick.HEIGHT) {
+				if(!runThru && ball.y + Ball.SIZE/2 - ball.yVelocity >= b.y && ball.y + Ball.SIZE/2 - ball.yVelocity <= b.y + Brick.HEIGHT) {
 					
 					ball.setXDirection(-ball.xVelocity);
 				}
