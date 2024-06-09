@@ -7,7 +7,7 @@
 import java.awt.*;
 
 public class PowerUp extends Rectangle{
-	public static final Color COLORS[] = {Color.yellow, Color.white};
+	public static final Color COLORS[] = {Color.yellow, Color.white, Color.pink};
 	
 	public static final int WIDTH = 60;
 	public static final int HEIGHT = 15;
