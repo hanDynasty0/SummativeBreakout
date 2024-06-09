@@ -29,19 +29,42 @@ public class Ball extends Rectangle {
 
 	public void keyPressed(KeyEvent e) {
 
-		// if ball is not moving
-		if (xVelocity == 0 && yVelocity == 0) {
+		// if ball is not moving towards or away from the bricks
+		if (yVelocity == 0) {
 
 			//when space bar is hit, drop ball
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				xVelocity = 0;
-				yVelocity = Y_SPEED;
-
-				
-
+				yVelocity = -Y_SPEED;
+				move();
+			}
+			if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+				xVelocity = -8;
+				yVelocity = 0;
+				move();
+			}
+			if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				xVelocity = 8;
+				yVelocity = 0;
+				move();
 			}
 		}
 
+	}
+	
+	public void keyReleased(KeyEvent e) {
+		if(yVelocity == 0) {
+			if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+				xVelocity = 0;
+				yVelocity = 0;
+				move();
+			}
+			if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				xVelocity = 0;
+				yVelocity = 0;
+				move();
+			}
+		}
 	}
 
 	// called when movement of ball changes in the y-direction
