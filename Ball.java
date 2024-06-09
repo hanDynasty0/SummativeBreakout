@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 
 public class Ball extends Rectangle {
 
-	public static final int size = 20;
+	public static final int SIZE = 20;
 	public static final int Y_SPEED = 8;
 	public int yVelocity;
 	public int xVelocity;
@@ -21,7 +21,7 @@ public class Ball extends Rectangle {
 
 	// constructor creates a stationary ball at given location with given dimensions
 	public Ball(int x, int y) {
-		super(x, y, size, size);
+		super(x, y, SIZE, SIZE);
 		xVelocity = 0;
 		yVelocity = 0;
 		color = Color.white;
@@ -63,7 +63,7 @@ public class Ball extends Rectangle {
 	// appearance and position of ball
 	public void draw(Graphics g) {
 		g.setColor(color);
-		g.fillOval(x, y, size, size);
+		g.fillOval(x, y, SIZE, SIZE);
 	}
 
 }
