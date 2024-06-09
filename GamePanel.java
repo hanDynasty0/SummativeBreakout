@@ -274,13 +274,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		// if ball passes bottom edge
 		if (ball.y >= GAME_HEIGHT) {
+			
+			powerUps.clear();
+			resetPowerUps();
 	
 			paddle = new Paddle((GAME_WIDTH - Paddle.width)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
 			ball = new Ball(GAME_WIDTH / 2 - Ball.size / 2, 3*GAME_HEIGHT/4 - Ball.size/2);
 			
-			powerUps.clear();
-			runThru = false;
-			paddle.setWidth(GAME_WIDTH/10);
 		}	
 		
 		// ball bounces off of bricks
@@ -317,19 +317,32 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			if(powerUps.get(i).intersects(paddle)) {
 				PowerUp p = powerUps.remove(i);
 				if(p.color == Color.yellow) {
+					resetPowerUps();
 					runThru = true;
 					ball.color = Color.yellow;
-					paddle.setWidth(GAME_WIDTH/10);
-					
+										
 				}
 				else if(p.color == Color.white) {
-					runThru = false;
-					ball.color = Color.white;
+					resetPowerUps();
 					paddle.setWidth(GAME_WIDTH/7);
+				}
+				else if(p.color == Color.pink) {
+					resetPowerUps();
+					
+					if(Math.abs(ball.yVelocity) == Ball.Y_SPEED) {
+						ball.setXDirection(3*ball.xVelocity/4);
+					}
+					if(ball.yVelocity > 0) {
+						ball.setYDirection(3*Ball.Y_SPEED/4);
+					}
+					else {
+						ball.setYDirection(-3*Ball.Y_SPEED/4);
+					}
+					Ball.xVelocityFactor = 8;
 				}
 				break;
 			}
-		}	
+		}		
 		
 		// remove the power up from the list if it falls off the screen
 		for(int i = 0; i < powerUps.size(); i++) {
@@ -338,6 +351,23 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				break;
 			}
 		}
+	}
+
+	public void resetPowerUps() {
+		runThru = false;
+		ball.color = Color.white;
+		paddle.setWidth(GAME_WIDTH/10);
+		
+		if(Math.abs(ball.yVelocity) < Ball.Y_SPEED) {
+			ball.setXDirection(4*ball.xVelocity/3);
+		}
+		if(ball.yVelocity > 0) {
+			ball.setYDirection(Ball.Y_SPEED);
+		}
+		else {
+			ball.setYDirection(-Ball.Y_SPEED);
+		}
+		Ball.xVelocityFactor = 6;
 	}
 
 	// runs and calls other methods continually
