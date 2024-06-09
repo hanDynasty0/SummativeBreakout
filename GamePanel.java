@@ -26,6 +26,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public ArrayList<PowerUp> powerUps;
 
 	public boolean runThru;
+	public boolean powerUpActing;
+	public int powerBounces;
 
 	public GamePanel() {
 
@@ -43,7 +45,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		
 		
 		// level one brick design
-		/*
+		
 		curBricks.add(new Brick(5,100,true,Color.red));
 		curBricks.add(new Brick(90,100,false, Color.yellow));
 		curBricks.add(new Brick(175,100,false, Color.blue));
@@ -82,7 +84,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		curBricks.add(new Brick(460,415,false,Color.red));
 		curBricks.add(new Brick(545,415,false, Color.yellow));
 		curBricks.add(new Brick(630,415,false, Color.blue));
-		curBricks.add(new Brick(715,415,false, Color.green));*/
+		curBricks.add(new Brick(715,415,false, Color.green));
 
 		//level 2 design
 		/*curBricks.add(new Brick(500,100,false, Color.cyan));
@@ -133,6 +135,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		
 		//level 3
+		/*
 		curBricks.add(new Brick(115,55,false,Color.blue));
 		curBricks.add(new Brick(200,100,false,Color.cyan));
 		curBricks.add(new Brick(285,145,true, Color.cyan));
@@ -157,10 +160,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		curBricks.add(new Brick(630,370,false,Color.cyan));
 		curBricks.add(new Brick(715,415,false,Color.cyan));
 		curBricks.add(new Brick(800,460,true,Color.blue));
-
+		*/
 		
 		
-		
+		powerUpActing = false;
+		powerBounces = 0;
 		runThru = false;
 		
 		this.setFocusable(true);
@@ -267,7 +271,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			ball.setXDirection((ballX - paddleX)/7 + (int)(3*Math.random()) - 1);
 
 			// makes ball bounces controllable by the player
-
+			
+			if(powerUpActing) {
+				powerBounces++;
+			}
+			if(powerBounces > 5) {
+				resetPowerUps();
+			}
 		}
 
 
@@ -340,6 +350,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					}
 					Ball.xVelocityFactor = 8;
 				}
+				powerUpActing = true;
 				break;
 			}
 		}		
@@ -368,6 +379,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			ball.setYDirection(-Ball.Y_SPEED);
 		}
 		Ball.xVelocityFactor = 6;
+		
+		powerUpActing = false;
+		powerBounces = 0;
 	}
 
 	// runs and calls other methods continually
