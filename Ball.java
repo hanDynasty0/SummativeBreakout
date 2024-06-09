@@ -12,9 +12,11 @@ import java.awt.event.KeyEvent;
 public class Ball extends Rectangle {
 
 	public static final int size = 20;
+	public static final int Y_SPEED = 8;
 	public int yVelocity;
 	public int xVelocity;
-
+	public static int xVelocityFactor = 6;
+	
 	public Color color;
 
 	// constructor creates a stationary ball at given location with given dimensions
@@ -25,7 +27,6 @@ public class Ball extends Rectangle {
 		color = Color.white;
 	}
 
-	
 	public void keyPressed(KeyEvent e) {
 
 		// if ball is not moving
@@ -34,7 +35,7 @@ public class Ball extends Rectangle {
 			//when space bar is hit, drop ball
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				xVelocity = 0;
-				yVelocity = 8;
+				yVelocity = Y_SPEED;
 
 				
 
