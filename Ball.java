@@ -39,12 +39,12 @@ public class Ball extends Rectangle {
 				move();
 			}
 			if(e.getKeyCode() == KeyEvent.VK_LEFT) {
-				xVelocity = -8;
+				xVelocity = -10;
 				yVelocity = 0;
 				move();
 			}
 			if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				xVelocity = 8;
+				xVelocity = 10;
 				yVelocity = 0;
 				move();
 			}
