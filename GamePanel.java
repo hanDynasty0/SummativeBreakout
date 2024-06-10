@@ -273,6 +273,52 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			
 			if (level == 1) {
 				
+				curBricks.add(new Brick(5,100,true,Color.red));
+				curBricks.add(new Brick(90,100,false, Color.yellow));
+				curBricks.add(new Brick(175,100,false, Color.blue));
+				curBricks.add(new Brick(260,100,false, Color.green));
+
+				curBricks.add(new Brick(70,145,true, Color.red));
+				curBricks.add(new Brick(155,145,false, Color.yellow));
+				curBricks.add(new Brick(240,145,false, Color.blue));
+				curBricks.add(new Brick(325,145,false, Color.green));
+
+				curBricks.add(new Brick(135,190,false, Color.red));
+				curBricks.add(new Brick(220,190,false, Color.yellow));
+				curBricks.add(new Brick(305,190,false, Color.blue));
+				curBricks.add(new Brick(390,190,false, Color.green));
+
+				curBricks.add(new Brick(200,235,false,Color.red));
+				curBricks.add(new Brick(285,235,false, Color.yellow));
+				curBricks.add(new Brick(370,235,false, Color.blue));
+				curBricks.add(new Brick(455,235,false, Color.green));
+
+				curBricks.add(new Brick(265,280,false,Color.red));
+				curBricks.add(new Brick(350,280,false, Color.yellow));
+				curBricks.add(new Brick(435,280,true, Color.blue));
+				curBricks.add(new Brick(520,280,false, Color.green));
+
+				curBricks.add(new Brick(330,325,false,Color.red));
+				curBricks.add(new Brick(415,325,false, Color.yellow));
+				curBricks.add(new Brick(500,325,false, Color.blue));
+				curBricks.add(new Brick(585,325,false, Color.green));
+
+				curBricks.add(new Brick(395,370,false,Color.red));
+				curBricks.add(new Brick(480,370,true, Color.yellow));
+				curBricks.add(new Brick(565,370,false, Color.blue));
+				curBricks.add(new Brick(650,370,false, Color.green));
+
+				curBricks.add(new Brick(460,415,false,Color.red));
+				curBricks.add(new Brick(545,415,false, Color.yellow));
+				curBricks.add(new Brick(630,415,false, Color.blue));
+				curBricks.add(new Brick(715,415,false, Color.green));
+				
+				
+			}
+			
+
+			else if(level == 2){
+				
 				curBricks.add(new Brick(500,100,false, Color.cyan));
 				curBricks.add(new Brick(415,100,false, Color.cyan));
 				curBricks.add(new Brick(545,145,false, Color.cyan));
@@ -319,11 +365,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				curBricks.add(new Brick(130,280,false, Color.cyan));
 				curBricks.add(new Brick(45,280,false, Color.cyan)); 
 				
-				
 			}
 			
-
-			else if(level == 2){
+			else if (level == 3){
+				instructions = true;
 				
 				curBricks.add(new Brick(115,55,false,Color.blue));
 				curBricks.add(new Brick(200,100,false,Color.cyan));
@@ -349,50 +394,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				curBricks.add(new Brick(630,370,false,Color.cyan));
 				curBricks.add(new Brick(715,415,false,Color.cyan));
 				curBricks.add(new Brick(800,460,true,Color.blue));
-			}
-			
-			else if (level == 3){
-				instructions = true;
-				
-				curBricks.add(new Brick(5,100,true,Color.red));
-				curBricks.add(new Brick(90,100,false, Color.yellow));
-				curBricks.add(new Brick(175,100,false, Color.blue));
-				curBricks.add(new Brick(260,100,false, Color.green));
-
-				curBricks.add(new Brick(70,145,true, Color.red));
-				curBricks.add(new Brick(155,145,false, Color.yellow));
-				curBricks.add(new Brick(240,145,false, Color.blue));
-				curBricks.add(new Brick(325,145,false, Color.green));
-
-				curBricks.add(new Brick(135,190,false, Color.red));
-				curBricks.add(new Brick(220,190,false, Color.yellow));
-				curBricks.add(new Brick(305,190,false, Color.blue));
-				curBricks.add(new Brick(390,190,false, Color.green));
-
-				curBricks.add(new Brick(200,235,false,Color.red));
-				curBricks.add(new Brick(285,235,false, Color.yellow));
-				curBricks.add(new Brick(370,235,false, Color.blue));
-				curBricks.add(new Brick(455,235,false, Color.green));
-
-				curBricks.add(new Brick(265,280,false,Color.red));
-				curBricks.add(new Brick(350,280,false, Color.yellow));
-				curBricks.add(new Brick(435,280,true, Color.blue));
-				curBricks.add(new Brick(520,280,false, Color.green));
-
-				curBricks.add(new Brick(330,325,false,Color.red));
-				curBricks.add(new Brick(415,325,false, Color.yellow));
-				curBricks.add(new Brick(500,325,false, Color.blue));
-				curBricks.add(new Brick(585,325,false, Color.green));
-
-				curBricks.add(new Brick(395,370,false,Color.red));
-				curBricks.add(new Brick(480,370,true, Color.yellow));
-				curBricks.add(new Brick(565,370,false, Color.blue));
-				curBricks.add(new Brick(650,370,false, Color.green));
-
-				curBricks.add(new Brick(460,415,false,Color.red));
-				curBricks.add(new Brick(545,415,false, Color.yellow));
-				curBricks.add(new Brick(630,415,false, Color.blue));
-				curBricks.add(new Brick(715,415,false, Color.green));
 				
 				level = 0;
 			}
