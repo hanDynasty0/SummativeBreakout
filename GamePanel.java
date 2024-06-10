@@ -15,6 +15,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public static final int GAME_WIDTH = 1000;
 	public static final int GAME_HEIGHT = GAME_WIDTH * 2 / 3;
 	public boolean instructions = true;
+	
 
 	public Thread gameThread;
 	public Image image;
@@ -27,7 +28,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	public boolean runThru;
 	public boolean powerUpActing;
-	public int powerBounces;
+	public int powerBounces, lives = 9;
 	
 	public int level;
 
@@ -83,7 +84,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			g.drawString("Press spacebar to start! Knock out all of the blocks!", GAME_WIDTH * 1 / 4, GAME_HEIGHT * 6 / 7);
 			g.drawString("Use the left and right arrow keys to move the paddle...", GAME_WIDTH * 1 / 4, GAME_HEIGHT * 25 / 28);
 
+			
 		}
+		g.setColor(Color.white);
+		g.setFont(new Font("Consolas", Font.PLAIN, 15));
+		g.drawString("Lives left: " + lives, GAME_WIDTH * 1 / 21, GAME_HEIGHT * 1 / 20);
+		g.drawString("Level: " + level, GAME_WIDTH * 1 / 6, GAME_HEIGHT * 1 / 20);
+
 
 		// draw all bricks in the list
 		for(Brick b: curBricks) {
@@ -94,9 +101,34 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		for(PowerUp p: powerUps) {
 			p.draw(g);
 		}
+		
+		
+		if(lives == 0)
+		{
+			lose(g);
+		}
+		
+		if(level == 4)
+		{
+			win(g);
+		}
 
 	}
 
+	public void win(Graphics g) {
+		curBricks.clear();
+		g.setColor(Color.white);
+		g.setFont(new Font("Consolas", Font.PLAIN, 20));
+		g.drawString("You Win !!! Hit Space to play again!", GAME_WIDTH/3, GAME_HEIGHT * 5/7);
+	}
+
+	public void lose(Graphics g) {
+		curBricks.clear();
+		g.setColor(Color.white);
+		g.setFont(new Font("Consolas", Font.PLAIN, 20));
+		g.drawString("You Lost !!! Hit Space to play again!", GAME_WIDTH/3, GAME_HEIGHT * 5/7);
+		
+	}
 	// positions of all moving objects constantly updated
 	public void move() {
 		paddle.move();
@@ -107,7 +139,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			p.move();
 		}
 	}
-
+	
 	// handles all collision detection and responds accordingly
 	public void checkCollision() {
 
@@ -178,6 +210,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			powerUps.clear();
 			resetPowerUps();
 	
+			lives--;
 			paddle = new Paddle((GAME_WIDTH - Paddle.width)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
 			ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, paddle.y-Ball.SIZE);
 			
@@ -257,7 +290,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 	
 	public void changeLevel() {
-		if(curBricks.isEmpty()) {
+		if(curBricks.isEmpty() && lives > 0) {
 			
 			resetPowerUps();
 			
@@ -395,7 +428,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				curBricks.add(new Brick(715,415,false,Color.cyan));
 				curBricks.add(new Brick(800,460,true,Color.blue));
 				
-				level = 0;
 			}
 			
 		}
@@ -455,6 +487,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			instructions = false; // stop showing instructions after hitting space bar
+		}
+		
+		if(lives == 0 || level == 4)
+		{
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				level = 0;
+				lives = 9;
+			}
 		}
 
 		paddle.keyPressed(e);
