@@ -290,7 +290,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 	
 	public void changeLevel() {
-		if(curBricks.isEmpty() && lives > 0) {
+		if(curBricks.isEmpty() && lives > 0 && level <= 3) {
 			
 			resetPowerUps();
 			
@@ -427,7 +427,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				curBricks.add(new Brick(630,370,false,Color.cyan));
 				curBricks.add(new Brick(715,415,false,Color.cyan));
 				curBricks.add(new Brick(800,460,true,Color.blue));
-				
 			}
 			
 		}
