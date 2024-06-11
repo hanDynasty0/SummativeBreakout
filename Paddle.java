@@ -1,7 +1,7 @@
 
 /* 
  * Author: Han Fang and Hazel Bains
- * Date: June 4
+ * Date: June 11
  * Description: Paddle class creates and controls movement of paddle on screen
  */
 import java.awt.*;
@@ -20,6 +20,7 @@ public class Paddle extends Rectangle {
 
 	}
 	
+	//sets width of paddle 
 	public void setWidth(int wid) {
 		x -= (wid-width)/2;
 		super.width=wid;
