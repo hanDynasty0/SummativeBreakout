@@ -1,6 +1,6 @@
 /* 
  * Author: Han Fang and Hazel Bains
- * Date: June 4
+ * Date: June 11
  * Description: Ball class manages the display, position and velocity of the ball
  */
 
@@ -30,14 +30,16 @@ public class Ball extends Rectangle {
 	public void keyPressed(KeyEvent e) {
 
 		// if ball is not moving towards or away from the bricks
+		//if ball is on paddle
 		if (yVelocity == 0) {
 
-			//when space bar is hit, drop ball
+			//when space bar is hit, release ball
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				xVelocity = 0;
 				yVelocity = -Y_SPEED;
 				move();
 			}
+			
 			if(e.getKeyCode() == KeyEvent.VK_LEFT) {
 				xVelocity = -10;
 				yVelocity = 0;
