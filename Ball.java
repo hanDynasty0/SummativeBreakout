@@ -4,8 +4,6 @@
  * Description: Ball class manages the display, position and velocity of the ball
  */
 
-
-
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
@@ -16,7 +14,7 @@ public class Ball extends Rectangle {
 	public int yVelocity;
 	public int xVelocity;
 	public static int xVelocityFactor = 6;
-	
+
 	public Color color;
 
 	// constructor creates a stationary ball at given location with given dimensions
@@ -27,25 +25,30 @@ public class Ball extends Rectangle {
 		color = Color.white;
 	}
 
+	// called from GamePanel when any keyboard input is detected
+	// updates the direction of the ball based on user input
 	public void keyPressed(KeyEvent e) {
 
 		// if ball is not moving towards or away from the bricks
-		//if ball is on paddle
+		// if ball is on paddle
 		if (yVelocity == 0) {
 
-			//when space bar is hit, release ball
+			// when space bar is hit, release ball
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				xVelocity = 0;
 				yVelocity = -Y_SPEED;
 				move();
 			}
-			
-			if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+
+			// move left with the paddle
+			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 				xVelocity = -10;
 				yVelocity = 0;
 				move();
 			}
-			if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			
+			// move right with the paddle
+			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 				xVelocity = 10;
 				yVelocity = 0;
 				move();
@@ -53,15 +56,17 @@ public class Ball extends Rectangle {
 		}
 
 	}
-	
+
+	// called from GamePanel when any key is released (no longer being pressed down)
+	// Makes the ball stop moving in that direction
 	public void keyReleased(KeyEvent e) {
-		if(yVelocity == 0) {
-			if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+		if (yVelocity == 0) {
+			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 				xVelocity = 0;
 				yVelocity = 0;
 				move();
 			}
-			if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 				xVelocity = 0;
 				yVelocity = 0;
 				move();
