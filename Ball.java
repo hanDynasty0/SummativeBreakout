@@ -25,8 +25,7 @@ public class Ball extends Rectangle {
 		color = Color.white;
 	}
 
-	// called from GamePanel when any keyboard input is detected
-	// updates the direction of the ball based on user input
+	// checks for specific key input for the ball
 	public void keyPressed(KeyEvent e) {
 
 		// if ball is not moving towards or away from the bricks
@@ -57,8 +56,7 @@ public class Ball extends Rectangle {
 
 	}
 
-	// called from GamePanel when any key is released (no longer being pressed down)
-	// Makes the ball stop moving in that direction
+	// makes paddle stop moving after arrow keys are released
 	public void keyReleased(KeyEvent e) {
 		if (yVelocity == 0) {
 			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
