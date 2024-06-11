@@ -15,6 +15,7 @@ public class PowerUp extends Rectangle{
 	
 	public Color color;
 	
+	// constructor creates power up at given location with given dimensions
 	public PowerUp(int x, int y) {
 		super(x, y, WIDTH, HEIGHT);
 		
