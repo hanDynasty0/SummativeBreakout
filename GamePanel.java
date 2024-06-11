@@ -1,6 +1,6 @@
 /* 
  * Author: Han Fang and Hazel Bains
- * Date: June 4
+ * Date: June 11
  * Description: GamePanel class acts as the main "game loop" - continuously runs the game and calls whatever needs to be called
  */
 
@@ -15,43 +15,42 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public static final int GAME_WIDTH = 1000;
 	public static final int GAME_HEIGHT = GAME_WIDTH * 2 / 3;
 	public boolean instructions = true;
-	
 
 	public Thread gameThread;
 	public Image image;
 	public Graphics graphics;
 	public Paddle paddle;
 	public Ball ball;
-	
+
 	public ArrayList<Brick> curBricks;
 	public ArrayList<PowerUp> powerUps;
 
 	public boolean runThru;
 	public boolean powerUpActing;
 	public int powerBounces, lives = 9;
-	
+
 	public int level;
 
 	public GamePanel() {
 
 		// creating paddle near the bottom of screen
-		paddle = new Paddle((GAME_WIDTH - Paddle.width)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
+		paddle = new Paddle((GAME_WIDTH - Paddle.width) / 2, 15 * (GAME_HEIGHT - Paddle.HEIGHT) / 16);
 
 		// creating ball on the paddle
-		ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, paddle.y-Ball.SIZE);
-	
+		ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, paddle.y - Ball.SIZE);
+
 		// creating a list with all the power ups
 		powerUps = new ArrayList<>();
-		
+
 		// creating a list with all the bricks
 		curBricks = new ArrayList<>();
-				
+
 		powerUpActing = false;
 		powerBounces = 0;
 		runThru = false;
-		
+
 		level = 0;
-		
+
 		this.setFocusable(true);
 		this.addKeyListener(this); // start listening for keyboard input
 
@@ -75,71 +74,72 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public void draw(Graphics g) {
 		paddle.draw(g);
 		ball.draw(g);
-	
+
 		// instructions are displayed until space bar is hit at the start
 		if (instructions) {
 
 			g.setColor(Color.white);
 			g.setFont(new Font("Consolas", Font.PLAIN, 20));
-			g.drawString("Press spacebar to start! Knock out all of the blocks!", GAME_WIDTH * 1 / 4, GAME_HEIGHT * 6 / 7);
-			g.drawString("Use the left and right arrow keys to move the paddle...", GAME_WIDTH * 1 / 4, GAME_HEIGHT * 25 / 28);
+			g.drawString("Press spacebar to start! Knock out all of the blocks!", GAME_WIDTH * 1 / 4,
+					GAME_HEIGHT * 6 / 7);
+			g.drawString("Use the left and right arrow keys to move the paddle...", GAME_WIDTH * 1 / 4,
+					GAME_HEIGHT * 25 / 28);
 
-			
 		}
+		// lives and level displayed at top left corner
 		g.setColor(Color.white);
 		g.setFont(new Font("Consolas", Font.PLAIN, 15));
 		g.drawString("Lives left: " + lives, GAME_WIDTH * 1 / 21, GAME_HEIGHT * 1 / 20);
 		g.drawString("Level: " + level, GAME_WIDTH * 1 / 6, GAME_HEIGHT * 1 / 20);
 
-
 		// draw all bricks in the list
-		for(Brick b: curBricks) {
+		for (Brick b : curBricks) {
 			b.draw(g);
 		}
-		
+
 		// draw all power ups in the list
-		for(PowerUp p: powerUps) {
+		for (PowerUp p : powerUps) {
 			p.draw(g);
 		}
-		
-		
-		if(lives == 0)
-		{
+
+		if (lives == 0) {
 			lose(g);
 		}
-		
-		if(level == 4)
-		{
+
+		if (level == 4) {
 			win(g);
 		}
 
 	}
 
+	// method displays winning message
 	public void win(Graphics g) {
 		curBricks.clear();
 		g.setColor(Color.white);
-		g.setFont(new Font("Consolas", Font.PLAIN, 20));
-		g.drawString("You Win !!! Hit Space to play again!", GAME_WIDTH/3, GAME_HEIGHT * 5/7);
+		g.setFont(new Font("Consolas", Font.PLAIN, 30));
+		g.drawString("You Won !!! Hit Space to play again!", GAME_WIDTH / 5, GAME_HEIGHT / 2);
 	}
 
+	// method displays losing message
 	public void lose(Graphics g) {
 		curBricks.clear();
 		g.setColor(Color.white);
-		g.setFont(new Font("Consolas", Font.PLAIN, 20));
-		g.drawString("You Lost !!! Hit Space to play again!", GAME_WIDTH/3, GAME_HEIGHT * 5/7);
-		
+		g.setFont(new Font("Consolas", Font.PLAIN, 30));
+		g.drawString("You Lost !!! Hit Space to play again!", GAME_WIDTH / 5, GAME_HEIGHT / 2);
+
 	}
+
 	// positions of all moving objects constantly updated
 	public void move() {
 		paddle.move();
 		ball.move();
-		
+
 		// move all power ups
-		for(PowerUp p: powerUps) {
+		for (PowerUp p : powerUps) {
 			p.move();
 		}
 	}
-	
+
 	// handles all collision detection and responds accordingly
 	public void checkCollision() {
 
@@ -151,303 +151,302 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			paddle.x = GAME_WIDTH - Paddle.width;
 		}
 
-		if(ball.yVelocity == 0 && ball.x <= (Paddle.width-Ball.SIZE)/2) {
-			ball.x = (Paddle.width-Ball.SIZE)/2;
+		if (ball.yVelocity == 0 && ball.x <= (Paddle.width - Ball.SIZE) / 2) {
+			ball.x = (Paddle.width - Ball.SIZE) / 2;
 		}
-		
-		if(ball.yVelocity == 0 && ball.x >= GAME_WIDTH - (Paddle.width+Ball.SIZE)/2) {
-			ball.x = GAME_WIDTH - (Paddle.width+Ball.SIZE)/2;
+
+		if (ball.yVelocity == 0 && ball.x >= GAME_WIDTH - (Paddle.width + Ball.SIZE) / 2) {
+			ball.x = GAME_WIDTH - (Paddle.width + Ball.SIZE) / 2;
 		}
-		
+
 		// ball bounce off top edge
 		if (ball.y <= 0) {
 			ball.y = 0;
 			ball.setYDirection(-ball.yVelocity);
 		}
-		
+
 		// ball bounce off left edge
 		if (ball.x <= 0) {
 			ball.x = 0;
 			ball.setXDirection(-ball.xVelocity);
 		}
-		
+
 		// ball bounce off right edge
 		if (ball.x >= GAME_WIDTH - Ball.SIZE) {
 			ball.x = GAME_WIDTH - Ball.SIZE;
 			ball.setXDirection(-ball.xVelocity);
 		}
 
-
-
-		
 		// ball bounces off paddle
 		if (ball.intersects(paddle)) {
-			int ballX = ball.x + Ball.SIZE/2;
-			int paddleX = paddle.x + Paddle.width/2;
-			
+			int ballX = ball.x + Ball.SIZE / 2;
+			int paddleX = paddle.x + Paddle.width / 2;
+
 			ball.y = paddle.y - Ball.SIZE;
 			ball.setYDirection(-ball.yVelocity); // to bounce back
-			
-			// let the ball bounce in a certain direction depending on where it hits the paddle
+
+			// let the ball bounce in a certain direction depending on where it hits the
+			// paddle
 			// with a random variance of +-1
-			ball.setXDirection((ballX - paddleX)/7 + (int)(3*Math.random()) - 1);
+			ball.setXDirection((ballX - paddleX) / 7 + (int) (3 * Math.random()) - 1);
 
 			// makes ball bounces controllable by the player
-			
-			if(powerUpActing) {
+
+			if (powerUpActing) {
 				powerBounces++;
 			}
-			if(powerBounces > 5) {
+			// power up works for 5 bounces of the ball before it's gone
+			if (powerBounces > 5) {
 				resetPowerUps();
 			}
 		}
 
-
-
 		// if ball passes bottom edge
 		if (ball.y >= GAME_HEIGHT) {
-			
+
 			powerUps.clear();
 			resetPowerUps();
-	
+
+			// player loses a life if ball hits bottom edge of screen
 			lives--;
-			paddle = new Paddle((GAME_WIDTH - Paddle.width)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
-			ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, paddle.y-Ball.SIZE);
-			
-		}	
-		
+			paddle = new Paddle((GAME_WIDTH - Paddle.width) / 2, 15 * (GAME_HEIGHT - Paddle.HEIGHT) / 16);
+			ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, paddle.y - Ball.SIZE);
+
+		}
+
 		// ball bounces off of bricks
 		// loop through all the bricks to detect collisions
-		for(int i = 0; i < curBricks.size(); i++) {
-			
-			if(ball.intersects(curBricks.get(i))) {
-				
+		for (int i = 0; i < curBricks.size(); i++) {
+
+			if (ball.intersects(curBricks.get(i))) {
+
 				Brick b = curBricks.remove(i); // removes the brick so it is no longer drawn
-				
+
 				// spawn a power up if the broken brick contains one
-				if(b.hasPowerUp) {
+				if (b.hasPowerUp) {
 					powerUps.add(new PowerUp(b.x, b.y));
 				}
-				
+
 				// bounce off the left or right side of the brick
-				if(!runThru && ball.y + Ball.SIZE/2 - ball.yVelocity >= b.y && ball.y + Ball.SIZE/2 - ball.yVelocity <= b.y + Brick.HEIGHT) {
-					
+				if (!runThru && ball.y + Ball.SIZE / 2 - ball.yVelocity >= b.y
+						&& ball.y + Ball.SIZE / 2 - ball.yVelocity <= b.y + Brick.HEIGHT) {
+
 					ball.setXDirection(-ball.xVelocity);
 				}
-				
+
 				// bounce off the top or bottom side of the brick
-				else if (!runThru){
-					
+				else if (!runThru) {
+
 					ball.setYDirection(-ball.yVelocity);
 				}
-				
+
 				break;
 			}
 		}
 
 		// paddle interaction with power ups
-		for(int i = 0; i < powerUps.size(); i++) {
-			if(powerUps.get(i).intersects(paddle)) {
+		for (int i = 0; i < powerUps.size(); i++) {
+
+			if (powerUps.get(i).intersects(paddle)) {
 				PowerUp p = powerUps.remove(i);
-				if(p.color == Color.yellow) {
+
+				// yellow power up allows ball to run through many bricks
+				if (p.color == Color.yellow) {
 					resetPowerUps();
 					runThru = true;
 					ball.color = Color.yellow;
-										
+
 				}
-				else if(p.color == Color.white) {
+				// white power up increases length of paddle
+				else if (p.color == Color.white) {
 					resetPowerUps();
-					paddle.setWidth(GAME_WIDTH/7);
+					paddle.setWidth(GAME_WIDTH / 7);
 				}
-				else if(p.color == Color.pink) {
+
+				// pink power up makes ball slower
+				else if (p.color == Color.pink) {
 					resetPowerUps();
 					ball.color = Color.pink;
-					if(Math.abs(ball.yVelocity) == Ball.Y_SPEED) {
-						ball.setXDirection(3*ball.xVelocity/4);
+					if (Math.abs(ball.yVelocity) == Ball.Y_SPEED) {
+						ball.setXDirection(3 * ball.xVelocity / 4);
 					}
-					if(ball.yVelocity > 0) {
-						ball.setYDirection(3*Ball.Y_SPEED/4);
-					}
-					else {
-						ball.setYDirection(-3*Ball.Y_SPEED/4);
+					if (ball.yVelocity > 0) {
+						ball.setYDirection(3 * Ball.Y_SPEED / 4);
+					} else {
+						ball.setYDirection(-3 * Ball.Y_SPEED / 4);
 					}
 					Ball.xVelocityFactor = 8;
 				}
 				powerUpActing = true;
-				
-			
+
 				break;
 			}
-		}		
-		
+		}
+
 		// remove the power up from the list if it falls off the screen
-		for(int i = 0; i < powerUps.size(); i++) {
-			if(powerUps.get(i).y >= GAME_HEIGHT) {
+		for (int i = 0; i < powerUps.size(); i++) {
+			if (powerUps.get(i).y >= GAME_HEIGHT) {
 				powerUps.remove(i);
 				break;
 			}
 		}
 	}
-	
+
 	public void changeLevel() {
-		if(curBricks.isEmpty() && lives > 0 && level <= 3) {
-			
+		if (curBricks.isEmpty() && lives > 0 && level <= 3) {
+
 			resetPowerUps();
-			
+
 			// creating paddle near the bottom of screen
-			paddle = new Paddle((GAME_WIDTH - Paddle.width)/2, 15*(GAME_HEIGHT - Paddle.HEIGHT)/16);
+			paddle = new Paddle((GAME_WIDTH - Paddle.width) / 2, 15 * (GAME_HEIGHT - Paddle.HEIGHT) / 16);
 
 			// creating ball on the paddle
-			ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, paddle.y-Ball.SIZE);
-			
+			ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, paddle.y - Ball.SIZE);
+
 			powerUps.clear();
-			
+
 			level++;
-			
+
 			if (level == 1) {
-				
-				curBricks.add(new Brick(5,100,true,Color.red));
-				curBricks.add(new Brick(90,100,false, Color.yellow));
-				curBricks.add(new Brick(175,100,false, Color.blue));
-				curBricks.add(new Brick(260,100,false, Color.green));
 
-				curBricks.add(new Brick(70,145,true, Color.red));
-				curBricks.add(new Brick(155,145,false, Color.yellow));
-				curBricks.add(new Brick(240,145,false, Color.blue));
-				curBricks.add(new Brick(325,145,false, Color.green));
+				// level one brick design
+				curBricks.add(new Brick(5, 100, true, Color.red));
+				curBricks.add(new Brick(90, 100, false, Color.yellow));
+				curBricks.add(new Brick(175, 100, false, Color.blue));
+				curBricks.add(new Brick(260, 100, false, Color.green));
 
-				curBricks.add(new Brick(135,190,false, Color.red));
-				curBricks.add(new Brick(220,190,false, Color.yellow));
-				curBricks.add(new Brick(305,190,false, Color.blue));
-				curBricks.add(new Brick(390,190,false, Color.green));
+				curBricks.add(new Brick(70, 145, true, Color.red));
+				curBricks.add(new Brick(155, 145, false, Color.yellow));
+				curBricks.add(new Brick(240, 145, false, Color.blue));
+				curBricks.add(new Brick(325, 145, false, Color.green));
 
-				curBricks.add(new Brick(200,235,false,Color.red));
-				curBricks.add(new Brick(285,235,false, Color.yellow));
-				curBricks.add(new Brick(370,235,false, Color.blue));
-				curBricks.add(new Brick(455,235,false, Color.green));
+				curBricks.add(new Brick(135, 190, false, Color.red));
+				curBricks.add(new Brick(220, 190, false, Color.yellow));
+				curBricks.add(new Brick(305, 190, false, Color.blue));
+				curBricks.add(new Brick(390, 190, false, Color.green));
 
-				curBricks.add(new Brick(265,280,false,Color.red));
-				curBricks.add(new Brick(350,280,false, Color.yellow));
-				curBricks.add(new Brick(435,280,true, Color.blue));
-				curBricks.add(new Brick(520,280,false, Color.green));
+				curBricks.add(new Brick(200, 235, false, Color.red));
+				curBricks.add(new Brick(285, 235, false, Color.yellow));
+				curBricks.add(new Brick(370, 235, false, Color.blue));
+				curBricks.add(new Brick(455, 235, false, Color.green));
 
-				curBricks.add(new Brick(330,325,false,Color.red));
-				curBricks.add(new Brick(415,325,false, Color.yellow));
-				curBricks.add(new Brick(500,325,false, Color.blue));
-				curBricks.add(new Brick(585,325,false, Color.green));
+				curBricks.add(new Brick(265, 280, false, Color.red));
+				curBricks.add(new Brick(350, 280, false, Color.yellow));
+				curBricks.add(new Brick(435, 280, true, Color.blue));
+				curBricks.add(new Brick(520, 280, false, Color.green));
 
-				curBricks.add(new Brick(395,370,false,Color.red));
-				curBricks.add(new Brick(480,370,true, Color.yellow));
-				curBricks.add(new Brick(565,370,false, Color.blue));
-				curBricks.add(new Brick(650,370,false, Color.green));
+				curBricks.add(new Brick(330, 325, false, Color.red));
+				curBricks.add(new Brick(415, 325, false, Color.yellow));
+				curBricks.add(new Brick(500, 325, false, Color.blue));
+				curBricks.add(new Brick(585, 325, false, Color.green));
 
-				curBricks.add(new Brick(460,415,false,Color.red));
-				curBricks.add(new Brick(545,415,false, Color.yellow));
-				curBricks.add(new Brick(630,415,false, Color.blue));
-				curBricks.add(new Brick(715,415,false, Color.green));
-				
-				
+				curBricks.add(new Brick(395, 370, false, Color.red));
+				curBricks.add(new Brick(480, 370, true, Color.yellow));
+				curBricks.add(new Brick(565, 370, false, Color.blue));
+				curBricks.add(new Brick(650, 370, false, Color.green));
+
+				curBricks.add(new Brick(460, 415, false, Color.red));
+				curBricks.add(new Brick(545, 415, false, Color.yellow));
+				curBricks.add(new Brick(630, 415, false, Color.blue));
+				curBricks.add(new Brick(715, 415, false, Color.green));
+
 			}
-			
 
-			else if(level == 2){
-				
-				curBricks.add(new Brick(500,100,false, Color.cyan));
-				curBricks.add(new Brick(415,100,false, Color.cyan));
-				curBricks.add(new Brick(545,145,false, Color.cyan));
-				curBricks.add(new Brick(460,145,true, Color.magenta));
-				curBricks.add(new Brick(375,145,false, Color.cyan));
-				curBricks.add(new Brick(500,190,false, Color.magenta));
-				curBricks.add(new Brick(415,190,false, Color.magenta));
-				curBricks.add(new Brick(330,190,false, Color.cyan));
-				curBricks.add(new Brick(585,190,false, Color.cyan));
-				curBricks.add(new Brick(545,235,false, Color.cyan));
-				curBricks.add(new Brick(460,235,true, Color.magenta));
-				curBricks.add(new Brick(375,235,false, Color.cyan));
-				curBricks.add(new Brick(500,280,false, Color.cyan));
-				curBricks.add(new Brick(415,280,false, Color.cyan));
-				
-				curBricks.add(new Brick(700,100,true, Color.magenta));
-				curBricks.add(new Brick(785,100,false, Color.magenta));
-				curBricks.add(new Brick(870,100,false, Color.magenta));
-				curBricks.add(new Brick(915,145,false, Color.cyan));
-				curBricks.add(new Brick(830,145,false, Color.cyan));
-				curBricks.add(new Brick(745,145,false, Color.cyan));
-				curBricks.add(new Brick(785,190,false, Color.magenta));
-				curBricks.add(new Brick(870,190,false, Color.magenta));
-				curBricks.add(new Brick(830,235,false, Color.cyan));
-				curBricks.add(new Brick(915,235,false, Color.cyan));
-				curBricks.add(new Brick(745,235,false, Color.cyan));
-				curBricks.add(new Brick(700,280,false, Color.magenta));
-				curBricks.add(new Brick(785,280,false, Color.magenta));
-				curBricks.add(new Brick(870,280,false, Color.magenta));
+			else if (level == 2) {
+				// level 2 brick design
+				curBricks.add(new Brick(500, 100, false, Color.cyan));
+				curBricks.add(new Brick(415, 100, false, Color.cyan));
+				curBricks.add(new Brick(545, 145, false, Color.cyan));
+				curBricks.add(new Brick(460, 145, true, Color.magenta));
+				curBricks.add(new Brick(375, 145, false, Color.cyan));
+				curBricks.add(new Brick(500, 190, false, Color.magenta));
+				curBricks.add(new Brick(415, 190, false, Color.magenta));
+				curBricks.add(new Brick(330, 190, false, Color.cyan));
+				curBricks.add(new Brick(585, 190, false, Color.cyan));
+				curBricks.add(new Brick(545, 235, false, Color.cyan));
+				curBricks.add(new Brick(460, 235, true, Color.magenta));
+				curBricks.add(new Brick(375, 235, false, Color.cyan));
+				curBricks.add(new Brick(500, 280, false, Color.cyan));
+				curBricks.add(new Brick(415, 280, false, Color.cyan));
 
-			
-				curBricks.add(new Brick(215,100,false, Color.cyan));
-				curBricks.add(new Brick(130,100,false, Color.cyan));
-				curBricks.add(new Brick(45,100,true, Color.cyan));
-				curBricks.add(new Brick(175,145,false, Color.magenta));
-				curBricks.add(new Brick(90,145,false, Color.magenta));
-				curBricks.add(new Brick(5,145,false, Color.magenta));
-				curBricks.add(new Brick(130,190,true, Color.cyan));
-				curBricks.add(new Brick(45,190,false, Color.cyan));
-				curBricks.add(new Brick(175,235,false, Color.magenta));
-				curBricks.add(new Brick(90,235,false, Color.magenta));
-				curBricks.add(new Brick(5,235,false, Color.magenta));
-				curBricks.add(new Brick(215,280,true, Color.cyan));
-				curBricks.add(new Brick(130,280,false, Color.cyan));
-				curBricks.add(new Brick(45,280,false, Color.cyan)); 
-				
+				curBricks.add(new Brick(700, 100, true, Color.magenta));
+				curBricks.add(new Brick(785, 100, false, Color.magenta));
+				curBricks.add(new Brick(870, 100, false, Color.magenta));
+				curBricks.add(new Brick(915, 145, false, Color.cyan));
+				curBricks.add(new Brick(830, 145, false, Color.cyan));
+				curBricks.add(new Brick(745, 145, false, Color.cyan));
+				curBricks.add(new Brick(785, 190, false, Color.magenta));
+				curBricks.add(new Brick(870, 190, false, Color.magenta));
+				curBricks.add(new Brick(830, 235, false, Color.cyan));
+				curBricks.add(new Brick(915, 235, false, Color.cyan));
+				curBricks.add(new Brick(745, 235, false, Color.cyan));
+				curBricks.add(new Brick(700, 280, false, Color.magenta));
+				curBricks.add(new Brick(785, 280, false, Color.magenta));
+				curBricks.add(new Brick(870, 280, false, Color.magenta));
+
+				curBricks.add(new Brick(215, 100, false, Color.cyan));
+				curBricks.add(new Brick(130, 100, false, Color.cyan));
+				curBricks.add(new Brick(45, 100, true, Color.cyan));
+				curBricks.add(new Brick(175, 145, false, Color.magenta));
+				curBricks.add(new Brick(90, 145, false, Color.magenta));
+				curBricks.add(new Brick(5, 145, false, Color.magenta));
+				curBricks.add(new Brick(130, 190, true, Color.cyan));
+				curBricks.add(new Brick(45, 190, false, Color.cyan));
+				curBricks.add(new Brick(175, 235, false, Color.magenta));
+				curBricks.add(new Brick(90, 235, false, Color.magenta));
+				curBricks.add(new Brick(5, 235, false, Color.magenta));
+				curBricks.add(new Brick(215, 280, true, Color.cyan));
+				curBricks.add(new Brick(130, 280, false, Color.cyan));
+				curBricks.add(new Brick(45, 280, false, Color.cyan));
+
 			}
-			
-			else if (level == 3){
+
+			else if (level == 3) {
 				instructions = true;
-				
-				curBricks.add(new Brick(115,55,false,Color.blue));
-				curBricks.add(new Brick(200,100,false,Color.cyan));
-				curBricks.add(new Brick(285,145,true, Color.cyan));
-				curBricks.add(new Brick(370,190,false, Color.magenta));
-				curBricks.add(new Brick(415,235,false,Color.magenta));
-				curBricks.add(new Brick(500,235,false,Color.magenta));
-				curBricks.add(new Brick(545,190,false,Color.magenta));
-				curBricks.add(new Brick(630,145,false,Color.cyan));
-				curBricks.add(new Brick(715,100,false,Color.cyan));
-				curBricks.add(new Brick(800,55,false,Color.blue));
+				// level 3 brick design
+				curBricks.add(new Brick(115, 55, false, Color.blue));
+				curBricks.add(new Brick(200, 100, false, Color.cyan));
+				curBricks.add(new Brick(285, 145, true, Color.cyan));
+				curBricks.add(new Brick(370, 190, false, Color.magenta));
+				curBricks.add(new Brick(415, 235, false, Color.magenta));
+				curBricks.add(new Brick(500, 235, false, Color.magenta));
+				curBricks.add(new Brick(545, 190, false, Color.magenta));
+				curBricks.add(new Brick(630, 145, false, Color.cyan));
+				curBricks.add(new Brick(715, 100, false, Color.cyan));
+				curBricks.add(new Brick(800, 55, false, Color.blue));
 
+				curBricks.add(new Brick(500, 280, true, Color.magenta));
+				curBricks.add(new Brick(415, 280, false, Color.magenta));
+				curBricks.add(new Brick(370, 325, false, Color.magenta));
+				curBricks.add(new Brick(285, 370, false, Color.cyan));
+				curBricks.add(new Brick(200, 415, false, Color.cyan));
+				curBricks.add(new Brick(115, 460, true, Color.blue));
 
-				curBricks.add(new Brick(500,280,true,Color.magenta));
-				curBricks.add(new Brick(415,280,false,Color.magenta));
-				curBricks.add(new Brick(370,325,false,Color.magenta));
-				curBricks.add(new Brick(285,370,false,Color.cyan));
-				curBricks.add(new Brick(200,415,false,Color.cyan));
-				curBricks.add(new Brick(115,460,true,Color.blue));
-
-
-				curBricks.add(new Brick(545,325,false,Color.magenta));
-				curBricks.add(new Brick(630,370,false,Color.cyan));
-				curBricks.add(new Brick(715,415,false,Color.cyan));
-				curBricks.add(new Brick(800,460,true,Color.blue));
+				curBricks.add(new Brick(545, 325, false, Color.magenta));
+				curBricks.add(new Brick(630, 370, false, Color.cyan));
+				curBricks.add(new Brick(715, 415, false, Color.cyan));
+				curBricks.add(new Brick(800, 460, true, Color.blue));
 			}
-			
+
 		}
 	}
 
+	// method resets power ups so they are no longer in effect
 	public void resetPowerUps() {
 		runThru = false;
 		ball.color = Color.white;
-		paddle.setWidth(GAME_WIDTH/10);
-		
-		if(Math.abs(ball.yVelocity) < Ball.Y_SPEED) {
-			ball.setXDirection(4*ball.xVelocity/3);
+		paddle.setWidth(GAME_WIDTH / 10);
+
+		if (Math.abs(ball.yVelocity) < Ball.Y_SPEED) {
+			ball.setXDirection(4 * ball.xVelocity / 3);
 		}
-		if(ball.yVelocity > 0) {
+		if (ball.yVelocity > 0) {
 			ball.setYDirection(Ball.Y_SPEED);
-		}
-		else {
+		} else {
 			ball.setYDirection(-Ball.Y_SPEED);
 		}
 		Ball.xVelocityFactor = 6;
-		
+
 		powerUpActing = false;
 		powerBounces = 0;
 	}
@@ -487,9 +486,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			instructions = false; // stop showing instructions after hitting space bar
 		}
-		
-		if(lives == 0 || level == 4)
-		{
+
+		// if the player loses all lives or completes level 3
+		if (lives == 0 || level == 4) {
+			// if they hit space, the game is reset
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				level = 0;
 				lives = 9;
