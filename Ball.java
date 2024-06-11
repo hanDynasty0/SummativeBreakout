@@ -13,7 +13,7 @@ public class Ball extends Rectangle {
 	public static final int Y_SPEED = 8;
 	public int yVelocity;
 	public int xVelocity;
-	public static int xVelocityFactor = 6;
+	public static int xVelocityFactor = 6; // for calculating the resulting x velocity in paddle collisions
 
 	public Color color;
 
