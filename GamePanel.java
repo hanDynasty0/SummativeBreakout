@@ -86,11 +86,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					GAME_HEIGHT * 25 / 28);
 
 		}
+		
 		// lives and level displayed at top left corner
-		g.setColor(Color.white);
-		g.setFont(new Font("Consolas", Font.PLAIN, 15));
-		g.drawString("Lives left: " + lives, GAME_WIDTH * 1 / 21, GAME_HEIGHT * 1 / 20);
-		g.drawString("Level: " + level, GAME_WIDTH * 1 / 6, GAME_HEIGHT * 1 / 20);
+		// if the game is playing
+		if(lives > 0 && level <= 3) {
+			g.setColor(Color.white);
+			g.setFont(new Font("Consolas", Font.PLAIN, 15));
+			g.drawString("Lives left: " + lives, GAME_WIDTH * 1 / 21, GAME_HEIGHT * 1 / 20);
+			g.drawString("Level: " + level, GAME_WIDTH * 1 / 6, GAME_HEIGHT * 1 / 20);
+		}
 
 		// draw all bricks in the list
 		for (Brick b : curBricks) {
@@ -102,10 +106,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			p.draw(g);
 		}
 
+		// draw the lose screen if the player has no lives
 		if (lives == 0) {
 			lose(g);
 		}
 
+		// draw the win screen if the player won all the levels
 		if (level == 4) {
 			win(g);
 		}
@@ -151,10 +157,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			paddle.x = GAME_WIDTH - Paddle.width;
 		}
 
+		// keep the ball on the paddle when the player has not launched the ball
 		if (ball.yVelocity == 0 && ball.x <= (Paddle.width - Ball.SIZE) / 2) {
 			ball.x = (Paddle.width - Ball.SIZE) / 2;
 		}
-
 		if (ball.yVelocity == 0 && ball.x >= GAME_WIDTH - (Paddle.width + Ball.SIZE) / 2) {
 			ball.x = GAME_WIDTH - (Paddle.width + Ball.SIZE) / 2;
 		}
@@ -217,7 +223,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		// ball bounces off of bricks
 		// loop through all the bricks to detect collisions
 		for (int i = 0; i < curBricks.size(); i++) {
-
+			
 			if (ball.intersects(curBricks.get(i))) {
 
 				Brick b = curBricks.remove(i); // removes the brick so it is no longer drawn
@@ -292,6 +298,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		}
 	}
 
+	// changes the level by resetting power ups and adding bricks
 	public void changeLevel() {
 		if (curBricks.isEmpty() && lives > 0 && level <= 3) {
 
