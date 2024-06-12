@@ -14,7 +14,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// dimensions of window
 	public static final int GAME_WIDTH = 1000;
 	public static final int GAME_HEIGHT = GAME_WIDTH * 2 / 3;
-	public boolean instructions = true;
 
 	public Thread gameThread;
 	public Image image;
@@ -25,7 +24,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public ArrayList<Brick> curBricks;
 	public ArrayList<PowerUp> powerUps;
 
-	public boolean runThru;
+	public boolean instructions = true;
+	public boolean runThru, isStick;
 	public boolean powerUpActing;
 	public int powerBounces, lives = 9;
 
@@ -48,6 +48,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		powerUpActing = false;
 		powerBounces = 0;
 		runThru = false;
+		isStick = false;
 
 		level = 0;
 
@@ -189,14 +190,26 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			int paddleX = paddle.x + Paddle.width / 2;
 
 			ball.y = paddle.y - Ball.SIZE;
-			ball.setYDirection(-ball.yVelocity); // to bounce back
+			
+			// if the sticky power up is activated
+			// the ball stops on the paddle
+			if(isStick) {
+				ball.setXDirection(0);
+				ball.setYDirection(0);
+				ball.color = Color.gray;
+			}
+			
+			// if the ball doesn't stick to the paddle
+			else {
+				ball.setYDirection(-ball.yVelocity); // to bounce back
 
-			// let the ball bounce in a certain direction depending on where it hits the
-			// paddle
-			// with a random variance of +-1
-			ball.setXDirection((ballX - paddleX) / 7 + (int) (3 * Math.random()) - 1);
+				// let the ball bounce in a certain direction depending on where it hits the
+				// paddle
+				// with a random variance of +-1
+				ball.setXDirection((ballX - paddleX) / 7 + (int) (3 * Math.random()) - 1);
 
-			// makes ball bounces controllable by the player
+				// makes ball bounces controllable by the player
+			}
 
 			if (powerUpActing) {
 				powerBounces++;
@@ -204,6 +217,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			// power up works for 5 bounces of the ball before it's gone
 			if (powerBounces > 5) {
 				resetPowerUps();
+			}
+		}
+		
+		// if the sticky power up is activated
+		// and the ball is at rest on the paddle
+		// set the ball to be in the middle of the paddle
+		if(isStick && ball.yVelocity == 0) {
+			if(ball.x != paddle.x + (Paddle.width - Ball.SIZE)/2) {
+				ball.x = paddle.x + (Paddle.width - Ball.SIZE)/2;
 			}
 		}
 
@@ -282,6 +304,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 						ball.setYDirection(-3 * Ball.Y_SPEED / 4);
 					}
 					Ball.xVelocityFactor = 8;
+				}
+				
+				// gray power up makes the ball stick to the paddle
+				else if(p.color == Color.gray) {
+					resetPowerUps();
+					ball.color = Color.gray;
+					isStick = true;
+					
+					// if the ball is already on the paddle, let the ball remain on the paddle
+					if(ball.y == paddle.y - Ball.SIZE) {
+						ball.yVelocity = 0;
+					}
 				}
 				powerUpActing = true;
 
@@ -441,6 +475,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// method resets power ups so they are no longer in effect
 	public void resetPowerUps() {
 		runThru = false;
+		isStick = false;
 		ball.color = Color.white;
 		paddle.setWidth(GAME_WIDTH / 10);
 
