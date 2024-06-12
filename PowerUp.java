@@ -7,7 +7,7 @@
 import java.awt.*;
 
 public class PowerUp extends Rectangle{
-	public static final Color COLORS[] = {Color.yellow, Color.white, Color.pink};
+	public static final Color COLORS[] = {Color.yellow, Color.white, Color.pink, Color.gray};
 	
 	public static final int WIDTH = 60;
 	public static final int HEIGHT = 15;
@@ -50,6 +50,10 @@ public class PowerUp extends Rectangle{
 		//speed of ball slows power up
 		else if(color == Color.pink) {
 			g.drawString("-S", x+WIDTH/3, y+HEIGHT-1);
+		}
+		//ball sticks to paddle power up
+		else if(color == Color.gray) {
+			g.drawString("stick", x+WIDTH/5, y+HEIGHT-1);
 		}
 	}
 }
