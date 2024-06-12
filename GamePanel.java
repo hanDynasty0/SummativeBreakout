@@ -25,9 +25,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public ArrayList<PowerUp> powerUps;
 
 	public boolean instructions = true;
+	public boolean started;
 	public boolean runThru, isStick;
 	public boolean powerUpActing;
 	public int powerBounces, lives = 9;
+	
 
 	public int level;
 
@@ -73,11 +75,40 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// calling all draw methods for all objects to be displayed
 	public void draw(Graphics g) {
+	
+		if(!started)
+		{
+			g.setColor(Color.white);
+			g.setFont(new Font("Calibri", Font.PLAIN, 30));
+			g.drawString("WELCOME TO:", GAME_WIDTH * 1 / 4,GAME_HEIGHT * 1 / 7);
+			g.setFont(new Font("Calibri", Font.PLAIN, 100));
+			g.drawString("BREAKOUT", GAME_WIDTH * 1 / 4,GAME_HEIGHT * 1 / 4);
+			
+			g.setFont(new Font("Calibri", Font.PLAIN, 30));
+			g.drawString("--> Knock out all of the blocks!", GAME_WIDTH * 1 / 5,GAME_HEIGHT * 10 / 14);
+			g.drawString("-->You have 9 lives to complete 3 levels!", GAME_WIDTH * 1 / 5,GAME_HEIGHT * 11 / 14);
+			g.drawString("-->Collect power ups to help you! They last for 5 bounces.", GAME_WIDTH * 1 / 5,GAME_HEIGHT * 12 / 14);
+			g.drawString("placeholder", GAME_WIDTH * 1 / 5,GAME_HEIGHT * 13/ 14);
+
+			
+		curBricks.add(new Brick(375, 350, true, Color.red));
+			curBricks.add(new Brick(460, 350, true, Color.cyan)); 
+			curBricks.add(new Brick(545, 350, true, Color.green));
+			curBricks.add(new Brick(415, 305, true, Color.yellow));
+			curBricks.add(new Brick(500, 305, true, Color.magenta));
+			curBricks.add(new Brick(455, 260, true, Color.blue)); 
+
+
+
+		}
+	  if(started)
+	  {
+		 
 		paddle.draw(g);
 		ball.draw(g);
-
+	  }
 		// instructions are displayed until space bar is hit at the start
-		if (instructions) {
+		if (instructions && started) {
 
 			g.setColor(Color.white);
 			g.setFont(new Font("Consolas", Font.PLAIN, 20));
@@ -90,7 +121,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		
 		// lives and level displayed at top left corner
 		// if the game is playing
-		if(lives > 0 && level <= 3) {
+		if(lives > 0 && level <= 3 && started) {
 			g.setColor(Color.white);
 			g.setFont(new Font("Consolas", Font.PLAIN, 15));
 			g.drawString("Lives left: " + lives, GAME_WIDTH * 1 / 21, GAME_HEIGHT * 1 / 20);
@@ -124,7 +155,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		curBricks.clear();
 		g.setColor(Color.white);
 		g.setFont(new Font("Consolas", Font.PLAIN, 30));
-		g.drawString("You Won !!! Hit Space to play again!", GAME_WIDTH / 5, GAME_HEIGHT / 2);
+		g.drawString("You Won !!! Hit Space to return to home!", GAME_WIDTH / 5, GAME_HEIGHT / 2);
 	}
 
 	// method displays losing message
@@ -132,7 +163,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		curBricks.clear();
 		g.setColor(Color.white);
 		g.setFont(new Font("Consolas", Font.PLAIN, 30));
-		g.drawString("You Lost !!! Hit Space to play again!", GAME_WIDTH / 5, GAME_HEIGHT / 2);
+		g.drawString("You Lost !!! Hit Space to return to home!", GAME_WIDTH / 5, GAME_HEIGHT / 2);
 
 	}
 
@@ -334,7 +365,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// changes the level by resetting power ups and adding bricks
 	public void changeLevel() {
-		if (curBricks.isEmpty() && lives > 0 && level <= 3) {
+		if (curBricks.isEmpty() && lives > 0 && level <= 3 && started) {
 
 			resetPowerUps();
 
@@ -524,8 +555,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// calls all keyPressed methods for objects if pressing of key is detected for
 	// further action
 	public void keyPressed(KeyEvent e) {
-
-		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+		
+		if(!started && e.getKeyCode() == KeyEvent.VK_SPACE)
+		{
+			started = true;
+			curBricks.clear();
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_SPACE && started) {
 			instructions = false; // stop showing instructions after hitting space bar
 		}
 
@@ -535,6 +571,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				level = 0;
 				lives = 9;
+				started = false;
 			}
 		}
 
