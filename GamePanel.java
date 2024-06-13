@@ -86,11 +86,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			g.setFont(new Font("Calibri", Font.PLAIN, 100));
 			g.drawString("BREAKOUT", GAME_WIDTH * 1 / 4,GAME_HEIGHT * 1 / 4);
 			
-			g.setFont(new Font("Calibri", Font.PLAIN, 30));
+			g.setFont(new Font("Calibri", Font.PLAIN, 25));
 			g.drawString("--> Knock out all of the blocks!", GAME_WIDTH * 1 / 5,GAME_HEIGHT * 10 / 14);
-			g.drawString("-->You have 9 lives to complete 3 levels!", GAME_WIDTH * 1 / 5,GAME_HEIGHT * 11 / 14);
-			g.drawString("-->Collect power ups to help you! They last for 5 bounces.", GAME_WIDTH * 1 / 5,GAME_HEIGHT * 12 / 14);
-			g.drawString("placeholder", GAME_WIDTH * 1 / 5,GAME_HEIGHT * 13/ 14);
+			g.drawString("--> You have 9 lives to complete 3 levels!", GAME_WIDTH * 1 / 5,GAME_HEIGHT * 11 / 14);
+			g.drawString("--> Collect power ups to help you! They last for 5 bounces.", GAME_WIDTH * 1 / 5,GAME_HEIGHT * 12 / 14);
+			g.setFont(new Font("Calibri", Font.PLAIN, 30));
+			g.drawString("Hit SPACE to continue!", GAME_WIDTH * 7/ 20,GAME_HEIGHT * 13/ 14);
 
 			
 		curBricks.add(new Brick(375, 350, true, Color.red));
@@ -114,9 +115,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 			g.setColor(Color.white);
 			g.setFont(new Font("Consolas", Font.PLAIN, 20));
-			g.drawString("Press spacebar to start! Knock out all of the blocks!", GAME_WIDTH * 1 / 4,
+			g.drawString("Press spacebar to start!", GAME_WIDTH * 1 / 3,
 					GAME_HEIGHT * 6 / 7);
-			g.drawString("Use the left and right arrow keys to move the paddle...", GAME_WIDTH * 1 / 4,
+			g.drawString("Use the left and right arrow keys to move the paddle...", GAME_WIDTH * 1 / 5,
 					GAME_HEIGHT * 25 / 28);
 
 		}
@@ -155,17 +156,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// method displays winning message
 	public void win(Graphics g) {
 		curBricks.clear();
-		g.setColor(Color.white);
+		g.setColor(Color.green);
 		g.setFont(new Font("Consolas", Font.PLAIN, 30));
-		g.drawString("You Won !!! Hit Space to return to home!", GAME_WIDTH / 5, GAME_HEIGHT / 2);
+		g.drawString("You Won !!! Hit SPACE to return to home!", GAME_WIDTH / 6, GAME_HEIGHT / 2);
 	}
 
 	// method displays losing message
 	public void lose(Graphics g) {
 		curBricks.clear();
-		g.setColor(Color.white);
+		g.setColor(Color.red);
 		g.setFont(new Font("Consolas", Font.PLAIN, 30));
-		g.drawString("You Lost !!! Hit Space to return to home!", GAME_WIDTH / 5, GAME_HEIGHT / 2);
+		g.drawString("You Lost !!! Hit SPACE to return to home!", GAME_WIDTH / 6, GAME_HEIGHT / 2);
 
 	}
 
