@@ -78,6 +78,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	
 		if(!started)
 		{
+			powerUps.clear();
+			
 			g.setColor(Color.white);
 			g.setFont(new Font("Calibri", Font.PLAIN, 30));
 			g.drawString("WELCOME TO:", GAME_WIDTH * 1 / 4,GAME_HEIGHT * 1 / 7);
