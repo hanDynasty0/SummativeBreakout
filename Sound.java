@@ -14,16 +14,17 @@ import javax.sound.sampled.Clip;
 public class Sound {
 
 	private Clip clip; // stores the current audio clip
-	private URL soundURL[] = new URL[6]; // array of all the audio urls to be used in the game
+	private URL soundURL[] = new URL[7]; // array of all the audio urls to be used in the game
 
 	// constructor adds the audio urls to the relevant array
 	public Sound() {
-		soundURL[0] = getClass().getResource("/sound/Brick_Hit.wav");
-		soundURL[1] = getClass().getResource("/sound/Paddle_Hit.wav");
-		soundURL[2] = getClass().getResource("/sound/Power_Up.wav");
-		soundURL[3] = getClass().getResource("/sound/Reset.wav");
-		soundURL[4] = getClass().getResource("/sound/Win.wav");
-		soundURL[5] = getClass().getResource("/sound/Loss.wav");
+		soundURL[0] = getClass().getResource("/sound/Opening.wav");
+		soundURL[1] = getClass().getResource("/sound/Brick_Hit.wav");
+		soundURL[2] = getClass().getResource("/sound/Wall_Paddle_Hit.wav");
+		soundURL[3] = getClass().getResource("/sound/Power_Up.wav");
+		soundURL[4] = getClass().getResource("/sound/Reset.wav");
+		soundURL[5] = getClass().getResource("/sound/Win.wav");
+		soundURL[6] = getClass().getResource("/sound/Loss.wav");
 	}
 
 	// sets which audio file the object is referencing in other methods
@@ -46,5 +47,9 @@ public class Sound {
 	// loops the selected audio file
 	public void loop() {
 		clip.loop(Clip.LOOP_CONTINUOUSLY);
+	}
+	
+	public void stop() {
+		clip.stop();
 	}
 }
