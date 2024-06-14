@@ -20,6 +20,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public Graphics graphics;
 	public Paddle paddle;
 	public Ball ball;
+	public Sound sound;
 
 	public ArrayList<Brick> curBricks;
 	public ArrayList<PowerUp> powerUps;
@@ -29,7 +30,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public boolean runThru, isStick;
 	public boolean powerUpActing;
 	public int powerBounces, lives = 9;
-	
+	public long startMusicTime, endingMusicTime;
 
 	public int level;
 
@@ -40,6 +41,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 		// creating ball on the paddle
 		ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, paddle.y - Ball.SIZE);
+
+		// enabling sound in the game
+		sound = new Sound();
 
 		// creating a list with all the power ups
 		powerUps = new ArrayList<>();
@@ -53,6 +57,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		isStick = false;
 
 		level = 0;
+		startMusicTime = Long.MAX_VALUE;
+		endingMusicTime = Long.MAX_VALUE;
 
 		this.setFocusable(true);
 		this.addKeyListener(this); // start listening for keyboard input
@@ -75,41 +81,35 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// calling all draw methods for all objects to be displayed
 	public void draw(Graphics g) {
-	
-		if(!started)
-		{
+
+		if (!started) {
 			powerUps.clear();
-			
+
 			g.setColor(Color.white);
 			g.setFont(new Font("Calibri", Font.PLAIN, 30));
-			g.drawString("WELCOME TO:", GAME_WIDTH * 1 / 4,GAME_HEIGHT * 1 / 7);
+			g.drawString("WELCOME TO:", GAME_WIDTH * 1 / 4, GAME_HEIGHT * 1 / 7);
 			g.setFont(new Font("Calibri", Font.PLAIN, 100));
-			g.drawString("BREAKOUT", GAME_WIDTH * 1 / 4,GAME_HEIGHT * 1 / 4);
-			
+			g.drawString("BREAKOUT", GAME_WIDTH * 1 / 4, GAME_HEIGHT * 1 / 4);
+
 			g.setFont(new Font("Calibri", Font.PLAIN, 25));
-			g.drawString("--> Knock out all of the blocks!", GAME_WIDTH * 1 / 5,GAME_HEIGHT * 10 / 14);
+			g.drawString("--> Knock out all of the blocks!", GAME_WIDTH * 1 / 5, GAME_HEIGHT * 10 / 14);
 			g.drawString("--> You have 9 lives to complete 3 levels!", GAME_WIDTH * 1 / 5,GAME_HEIGHT * 11 / 14);
 			g.drawString("--> Collect power ups to help you! They last for 5 bounces.", GAME_WIDTH * 1 / 5,GAME_HEIGHT * 12 / 14);
 			g.setFont(new Font("Calibri", Font.PLAIN, 30));
 			g.drawString("Hit SPACE to continue!", GAME_WIDTH * 7/ 20,GAME_HEIGHT * 13/ 14);
 
-			
-		curBricks.add(new Brick(375, 350, true, Color.red));
-			curBricks.add(new Brick(460, 350, true, Color.cyan)); 
+			curBricks.add(new Brick(375, 350, true, Color.red));
+			curBricks.add(new Brick(460, 350, true, Color.cyan));
 			curBricks.add(new Brick(545, 350, true, Color.green));
 			curBricks.add(new Brick(415, 305, true, Color.yellow));
 			curBricks.add(new Brick(500, 305, true, Color.magenta));
-			curBricks.add(new Brick(455, 260, true, Color.blue)); 
-
-
+			curBricks.add(new Brick(455, 260, true, Color.blue));
 
 		}
-	  if(started)
-	  {
-		 
-		paddle.draw(g);
-		ball.draw(g);
-	  }
+		if (started) {
+			paddle.draw(g);
+			ball.draw(g);
+		}
 		// instructions are displayed until space bar is hit at the start
 		if (instructions && started) {
 
@@ -121,10 +121,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					GAME_HEIGHT * 25 / 28);
 
 		}
-		
+
 		// lives and level displayed at top left corner
 		// if the game is playing
-		if(lives > 0 && level <= 3 && started) {
+		if (lives > 0 && level <= 3 && started) {
 			g.setColor(Color.white);
 			g.setFont(new Font("Consolas", Font.PLAIN, 15));
 			g.drawString("Lives left: " + lives, GAME_WIDTH * 1 / 21, GAME_HEIGHT * 1 / 20);
@@ -183,185 +183,228 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// handles all collision detection and responds accordingly
 	public void checkCollision() {
+		
+		if(started) {
+			// keep paddle on screen
+			if (paddle.x <= 0) {
+				paddle.x = 0;
+			}
+			if (paddle.x >= GAME_WIDTH - Paddle.width) {
+				paddle.x = GAME_WIDTH - Paddle.width;
+			}
 
-		// keep paddle on screen
-		if (paddle.x <= 0) {
-			paddle.x = 0;
-		}
-		if (paddle.x >= GAME_WIDTH - Paddle.width) {
-			paddle.x = GAME_WIDTH - Paddle.width;
-		}
+			// keep the ball on the paddle when the player has not launched the ball
+			if (ball.yVelocity == 0 && ball.x <= (Paddle.width - Ball.SIZE) / 2) {
+				ball.x = (Paddle.width - Ball.SIZE) / 2;
+			}
+			if (ball.yVelocity == 0 && ball.x >= GAME_WIDTH - (Paddle.width + Ball.SIZE) / 2) {
+				ball.x = GAME_WIDTH - (Paddle.width + Ball.SIZE) / 2;
+			}
 
-		// keep the ball on the paddle when the player has not launched the ball
-		if (ball.yVelocity == 0 && ball.x <= (Paddle.width - Ball.SIZE) / 2) {
-			ball.x = (Paddle.width - Ball.SIZE) / 2;
-		}
-		if (ball.yVelocity == 0 && ball.x >= GAME_WIDTH - (Paddle.width + Ball.SIZE) / 2) {
-			ball.x = GAME_WIDTH - (Paddle.width + Ball.SIZE) / 2;
-		}
+			// ball bounce off top edge
+			if (ball.y <= 0) {
+				playSoundEffect(2);
+				ball.y = 0;
+				ball.setYDirection(-ball.yVelocity);
+			}
 
-		// ball bounce off top edge
-		if (ball.y <= 0) {
-			ball.y = 0;
-			ball.setYDirection(-ball.yVelocity);
-		}
+			// ball bounce off left edge
+			if (ball.x <= 0) {
+				playSoundEffect(2);
+				ball.x = 0;
+				ball.setXDirection(-ball.xVelocity);
+			}
 
-		// ball bounce off left edge
-		if (ball.x <= 0) {
-			ball.x = 0;
-			ball.setXDirection(-ball.xVelocity);
-		}
+			// ball bounce off right edge
+			if (ball.x >= GAME_WIDTH - Ball.SIZE) {
+				playSoundEffect(2);
+				ball.x = GAME_WIDTH - Ball.SIZE;
+				ball.setXDirection(-ball.xVelocity);
+			}
 
-		// ball bounce off right edge
-		if (ball.x >= GAME_WIDTH - Ball.SIZE) {
-			ball.x = GAME_WIDTH - Ball.SIZE;
-			ball.setXDirection(-ball.xVelocity);
-		}
+			// ball bounces off paddle
+			if (ball.intersects(paddle)) {
+				playSoundEffect(2);
 
-		// ball bounces off paddle
-		if (ball.intersects(paddle)) {
-			int ballX = ball.x + Ball.SIZE / 2;
-			int paddleX = paddle.x + Paddle.width / 2;
+				int ballX = ball.x + Ball.SIZE / 2;
+				int paddleX = paddle.x + Paddle.width / 2;
 
-			ball.y = paddle.y - Ball.SIZE;
-			
+				ball.y = paddle.y - Ball.SIZE;
+
+				// if the sticky power up is activated
+				// the ball stops on the paddle
+				if (isStick) {
+					ball.setXDirection(0);
+					ball.setYDirection(0);
+					ball.color = Color.gray;
+				}
+
+				// if the ball doesn't stick to the paddle
+				else {
+					ball.setYDirection(-ball.yVelocity); // to bounce back
+
+					// let the ball bounce in a certain direction depending on where it hits the
+					// paddle
+					// with a random variance of +-1
+					ball.setXDirection((ballX - paddleX) / 7 + (int) (3 * Math.random()) - 1);
+
+					// makes ball bounces controllable by the player
+				}
+
+				if (powerUpActing) {
+					powerBounces++;
+				}
+				// power up works for 5 bounces of the ball before it's gone
+				if (powerBounces > 5) {
+					resetPowerUps();
+				}
+			}
+
 			// if the sticky power up is activated
-			// the ball stops on the paddle
-			if(isStick) {
-				ball.setXDirection(0);
-				ball.setYDirection(0);
-				ball.color = Color.gray;
+			// and the ball is at rest on the paddle
+			// set the ball to be in the middle of the paddle
+			if (isStick && ball.yVelocity == 0) {
+				if (ball.x != paddle.x + (Paddle.width - Ball.SIZE) / 2) {
+					ball.x = paddle.x + (Paddle.width - Ball.SIZE) / 2;
+				}
+			}
+
+			// if ball passes bottom edge
+			if (ball.y >= GAME_HEIGHT) {
+				powerUps.clear();
+				resetPowerUps();
+
+				playSoundEffect(4);
+				// player loses a life if ball hits bottom edge of screen
+				lives--;
+				paddle = new Paddle((GAME_WIDTH - Paddle.width) / 2, 15 * (GAME_HEIGHT - Paddle.HEIGHT) / 16);
+				ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, paddle.y - Ball.SIZE);
+
+			}
+
+			// ball bounces off of bricks
+			// loop through all the bricks to detect collisions
+			for (int i = 0; i < curBricks.size(); i++) {
+
+				if (ball.intersects(curBricks.get(i))) {
+
+					playSoundEffect(1);
+
+					Brick b = curBricks.remove(i); // removes the brick so it is no longer drawn
+
+					// spawn a power up if the broken brick contains one
+					if (b.hasPowerUp) {
+						powerUps.add(new PowerUp(b.x, b.y));
+					}
+
+					// bounce off the left or right side of the brick
+					if (!runThru && ball.y + Ball.SIZE / 2 - ball.yVelocity >= b.y
+							&& ball.y + Ball.SIZE / 2 - ball.yVelocity <= b.y + Brick.HEIGHT) {
+
+						ball.setXDirection(-ball.xVelocity);
+					}
+
+					// bounce off the top or bottom side of the brick
+					else if (!runThru) {
+
+						ball.setYDirection(-ball.yVelocity);
+					}
+
+					break;
+				}
+			}
+
+			// paddle interaction with power ups
+			for (int i = 0; i < powerUps.size(); i++) {
+
+				if (powerUps.get(i).intersects(paddle)) {
+
+					playSoundEffect(3);
+
+					PowerUp p = powerUps.remove(i);
+
+					// yellow power up allows ball to run through many bricks
+					if (p.color == Color.yellow) {
+						resetPowerUps();
+						runThru = true;
+						ball.color = Color.yellow;
+
+					}
+					// white power up increases length of paddle
+					else if (p.color == Color.white) {
+						resetPowerUps();
+						paddle.setWidth(GAME_WIDTH / 7);
+					}
+
+					// pink power up makes ball slower
+					else if (p.color == Color.pink) {
+						resetPowerUps();
+						ball.color = Color.pink;
+						if (Math.abs(ball.yVelocity) == Ball.Y_SPEED) {
+							ball.setXDirection(3 * ball.xVelocity / 4);
+						}
+						if (ball.yVelocity > 0) {
+							ball.setYDirection(3 * Ball.Y_SPEED / 4);
+						} else {
+							ball.setYDirection(-3 * Ball.Y_SPEED / 4);
+						}
+						Ball.xVelocityFactor = 8;
+					}
+
+					// gray power up makes the ball stick to the paddle
+					else if (p.color == Color.gray) {
+						resetPowerUps();
+						ball.color = Color.gray;
+						isStick = true;
+
+						// if the ball is already on the paddle, let the ball remain on the paddle
+						if (ball.y == paddle.y - Ball.SIZE) {
+							ball.yVelocity = 0;
+						}
+					}
+					powerUpActing = true;
+
+					break;
+				}
+			}
+
+			// remove the power up from the list if it falls off the screen
+			for (int i = 0; i < powerUps.size(); i++) {
+				if (powerUps.get(i).y >= GAME_HEIGHT) {
+					powerUps.remove(i);
+					break;
+				}
 			}
 			
-			// if the ball doesn't stick to the paddle
-			else {
-				ball.setYDirection(-ball.yVelocity); // to bounce back
-
-				// let the ball bounce in a certain direction depending on where it hits the
-				// paddle
-				// with a random variance of +-1
-				ball.setXDirection((ballX - paddleX) / 7 + (int) (3 * Math.random()) - 1);
-
-				// makes ball bounces controllable by the player
+			// draw the lose screen if the player has no lives
+			if (lives == 0) {
+				startMusicTime = Long.MAX_VALUE;
+				stopMusic();
+				if (System.currentTimeMillis() < endingMusicTime) {
+					endingMusicTime = System.currentTimeMillis();
+				}
+				while (System.currentTimeMillis() <= endingMusicTime + 10) {
+					playSoundEffect(6);
+				}
 			}
 
-			if (powerUpActing) {
-				powerBounces++;
-			}
-			// power up works for 5 bounces of the ball before it's gone
-			if (powerBounces > 5) {
-				resetPowerUps();
+			// draw the win screen if the player won all the levels
+			if (level == 4) {
+				if (System.currentTimeMillis() < endingMusicTime) {
+					endingMusicTime = System.currentTimeMillis();
+				}
+				while (System.currentTimeMillis() <= endingMusicTime + 10) {
+					playSoundEffect(5);
+				}
 			}
 		}
 		
-		// if the sticky power up is activated
-		// and the ball is at rest on the paddle
-		// set the ball to be in the middle of the paddle
-		if(isStick && ball.yVelocity == 0) {
-			if(ball.x != paddle.x + (Paddle.width - Ball.SIZE)/2) {
-				ball.x = paddle.x + (Paddle.width - Ball.SIZE)/2;
+		else {
+			if (System.currentTimeMillis() < startMusicTime) {
+				startMusicTime = System.currentTimeMillis();
 			}
-		}
-
-		// if ball passes bottom edge
-		if (ball.y >= GAME_HEIGHT) {
-
-			powerUps.clear();
-			resetPowerUps();
-
-			// player loses a life if ball hits bottom edge of screen
-			lives--;
-			paddle = new Paddle((GAME_WIDTH - Paddle.width) / 2, 15 * (GAME_HEIGHT - Paddle.HEIGHT) / 16);
-			ball = new Ball(GAME_WIDTH / 2 - Ball.SIZE / 2, paddle.y - Ball.SIZE);
-
-		}
-
-		// ball bounces off of bricks
-		// loop through all the bricks to detect collisions
-		for (int i = 0; i < curBricks.size(); i++) {
-			
-			if (ball.intersects(curBricks.get(i))) {
-
-				Brick b = curBricks.remove(i); // removes the brick so it is no longer drawn
-
-				// spawn a power up if the broken brick contains one
-				if (b.hasPowerUp) {
-					powerUps.add(new PowerUp(b.x, b.y));
-				}
-
-				// bounce off the left or right side of the brick
-				if (!runThru && ball.y + Ball.SIZE / 2 - ball.yVelocity >= b.y
-						&& ball.y + Ball.SIZE / 2 - ball.yVelocity <= b.y + Brick.HEIGHT) {
-
-					ball.setXDirection(-ball.xVelocity);
-				}
-
-				// bounce off the top or bottom side of the brick
-				else if (!runThru) {
-
-					ball.setYDirection(-ball.yVelocity);
-				}
-
-				break;
-			}
-		}
-
-		// paddle interaction with power ups
-		for (int i = 0; i < powerUps.size(); i++) {
-
-			if (powerUps.get(i).intersects(paddle)) {
-				PowerUp p = powerUps.remove(i);
-
-				// yellow power up allows ball to run through many bricks
-				if (p.color == Color.yellow) {
-					resetPowerUps();
-					runThru = true;
-					ball.color = Color.yellow;
-
-				}
-				// white power up increases length of paddle
-				else if (p.color == Color.white) {
-					resetPowerUps();
-					paddle.setWidth(GAME_WIDTH / 7);
-				}
-
-				// pink power up makes ball slower
-				else if (p.color == Color.pink) {
-					resetPowerUps();
-					ball.color = Color.pink;
-					if (Math.abs(ball.yVelocity) == Ball.Y_SPEED) {
-						ball.setXDirection(3 * ball.xVelocity / 4);
-					}
-					if (ball.yVelocity > 0) {
-						ball.setYDirection(3 * Ball.Y_SPEED / 4);
-					} else {
-						ball.setYDirection(-3 * Ball.Y_SPEED / 4);
-					}
-					Ball.xVelocityFactor = 8;
-				}
-				
-				// gray power up makes the ball stick to the paddle
-				else if(p.color == Color.gray) {
-					resetPowerUps();
-					ball.color = Color.gray;
-					isStick = true;
-					
-					// if the ball is already on the paddle, let the ball remain on the paddle
-					if(ball.y == paddle.y - Ball.SIZE) {
-						ball.yVelocity = 0;
-					}
-				}
-				powerUpActing = true;
-
-				break;
-			}
-		}
-
-		// remove the power up from the list if it falls off the screen
-		for (int i = 0; i < powerUps.size(); i++) {
-			if (powerUps.get(i).y >= GAME_HEIGHT) {
-				powerUps.remove(i);
-				break;
+			while (System.currentTimeMillis() <= startMusicTime + 10) {
+				playMusicLoop(0);
 			}
 		}
 	}
@@ -558,13 +601,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// calls all keyPressed methods for objects if pressing of key is detected for
 	// further action
 	public void keyPressed(KeyEvent e) {
-		
-		if(!started && e.getKeyCode() == KeyEvent.VK_SPACE)
-		{
+
+		if (!started && e.getKeyCode() == KeyEvent.VK_SPACE) {
 			started = true;
 			curBricks.clear();
-		}
-		else if (e.getKeyCode() == KeyEvent.VK_SPACE && started) {
+			stopMusic();
+		} else if (e.getKeyCode() == KeyEvent.VK_SPACE && started) {
 			instructions = false; // stop showing instructions after hitting space bar
 		}
 
@@ -575,6 +617,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				level = 0;
 				lives = 9;
 				started = false;
+				startMusicTime = Long.MAX_VALUE;
+				endingMusicTime = Long.MAX_VALUE;
 			}
 		}
 
@@ -593,5 +637,22 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// here as required to be overrode by KeyListener interface
 	public void keyTyped(KeyEvent e) {
 
+	}
+
+	// play the selected music continuously in a loop
+	public void playMusicLoop(int i) {
+		sound.setFile(i);
+		sound.play();
+		sound.loop();
+	}
+
+	// play the selected sound effect
+	public void playSoundEffect(int i) {
+		sound.setFile(i);
+		sound.play();
+	}
+	
+	public void stopMusic() {
+		sound.stop();
 	}
 }
