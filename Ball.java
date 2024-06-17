@@ -1,6 +1,6 @@
 /* 
  * Author: Han Fang and Hazel Bains
- * Date: June 11
+ * Date: June 17, 2024
  * Description: Ball class manages the display, position and velocity of the ball
  */
 
