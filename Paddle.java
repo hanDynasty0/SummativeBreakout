@@ -1,7 +1,7 @@
 
 /* 
  * Author: Han Fang and Hazel Bains
- * Date: June 11
+ * Date: June 17, 2024
  * Description: Paddle class creates and controls movement of paddle on screen
  */
 import java.awt.*;
@@ -13,17 +13,17 @@ public class Paddle extends Rectangle {
 	public final int SPEED = 10; // speed of paddle
 	public static int width = GamePanel.GAME_WIDTH / 10;
 	public static final int HEIGHT = 5; // dimensions of paddle
-	
+
 	// constructor creates paddle at given location with given dimensions
 	public Paddle(int x, int y) {
 		super(x, y, width, HEIGHT);
 
 	}
-	
-	//sets width of paddle 
+
+	// sets width of paddle
 	public void setWidth(int wid) {
-		x -= (wid-width)/2;
-		super.width=wid;
+		x -= (wid - width) / 2;
+		super.width = wid;
 		width = wid;
 	}
 
@@ -58,7 +58,7 @@ public class Paddle extends Rectangle {
 
 	}
 
-//called when movement of the paddle changes in the x-direction 
+	// called when movement of the paddle changes in the x-direction 
 	public void setXDirection(int xDirection) {
 		xVelocity = xDirection;
 	}
