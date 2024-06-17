@@ -1,6 +1,6 @@
 /* 
  * Author: Han Fang and Hazel Bains
- * Date: June 11
+ * Date: June 17, 2024
  * Description: GameFrame creates frame for game when run
  */
 import java.awt.*;
