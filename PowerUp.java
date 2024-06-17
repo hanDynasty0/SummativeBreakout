@@ -13,7 +13,7 @@ public class PowerUp extends Rectangle{
 	public static final int HEIGHT = 15;
 	public static final int SPEED = 2;
 	
-	public Color color;
+	private Color color;
 	
 	// constructor creates power up at given location with given dimensions
 	public PowerUp(int x, int y) {
@@ -21,6 +21,11 @@ public class PowerUp extends Rectangle{
 		
 		//picks 1 of the random colors in the array each time a power up drops
 		color = COLORS[(int)((COLORS.length)*Math.random())];
+	}
+	
+	// accessor for the color of the power up
+	public Color getColor() {
+		return color;
 	}
 	
 	//power up falls at constant speed downwards
