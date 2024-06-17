@@ -11,8 +11,8 @@ public class Ball extends Rectangle {
 
 	public static final int SIZE = 20;
 	public static final int Y_SPEED = 8;
-	public int yVelocity;
-	public int xVelocity;
+	private int yVelocity;
+	private int xVelocity;
 	public static int xVelocityFactor = 6; // for calculating the resulting x velocity in paddle collisions
 
 	public Color color;
@@ -23,6 +23,14 @@ public class Ball extends Rectangle {
 		xVelocity = 0;
 		yVelocity = 0;
 		color = Color.white;
+	}
+	
+	// accessor methods for y and x velocity
+	public int getYVelocity() {
+		return yVelocity;
+	}
+	public int getXVelocity() {
+		return xVelocity;
 	}
 
 	// checks for specific key input for the ball
