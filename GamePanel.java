@@ -15,22 +15,22 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public static final int GAME_WIDTH = 1000;
 	public static final int GAME_HEIGHT = GAME_WIDTH * 2 / 3;
 
-	public Thread gameThread;
-	public Image image;
-	public Graphics graphics;
-	public Paddle paddle;
-	public Ball ball;
-	public Sound sound;
+	private Thread gameThread;
+	private Image image;
+	private Graphics graphics;
+	private Paddle paddle;
+	private Ball ball;
+	private Sound sound;
 
-	public ArrayList<Brick> curBricks;
-	public ArrayList<PowerUp> powerUps;
+	private ArrayList<Brick> curBricks;
+	private ArrayList<PowerUp> powerUps;
 
-	public boolean instructions = true;
-	public boolean started;
-	public boolean runThru, isStick;
-	public boolean powerUpActing;
-	public int powerBounces, lives = 9;
-	public long startingMusicTime, endingMusicTime;
+	private boolean instructions = true;
+	private boolean started;
+	private boolean runThru, isStick;
+	private boolean powerUpActing;
+	private int powerBounces, lives = 9;
+	private long startingMusicTime, endingMusicTime;
 
 	public int level;
 
@@ -157,7 +157,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	// method displays winning message
-	public void win(Graphics g) {
+	private void win(Graphics g) {
 		curBricks.clear();
 		g.setColor(Color.green);
 		g.setFont(new Font("Consolas", Font.PLAIN, 30));
@@ -165,7 +165,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	// method displays losing message
-	public void lose(Graphics g) {
+	private void lose(Graphics g) {
 		curBricks.clear();
 		g.setColor(Color.red);
 		g.setFont(new Font("Consolas", Font.PLAIN, 30));
@@ -174,7 +174,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	// positions of all moving objects constantly updated
-	public void move() {
+	private void move() {
 		paddle.move();
 		ball.move();
 
@@ -185,7 +185,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	// handles all collision detection and responds accordingly
-	public void checkCollision() {
+	private void checkCollision() {
 		
 		// collisions in the game
 		if(started) {
@@ -198,10 +198,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			}
 
 			// keep the ball on the paddle when the player has not launched the ball
-			if (ball.yVelocity == 0 && ball.x <= (Paddle.width - Ball.SIZE) / 2) {
+			if (ball.getYVelocity() == 0 && ball.x <= (Paddle.width - Ball.SIZE) / 2) {
 				ball.x = (Paddle.width - Ball.SIZE) / 2;
 			}
-			if (ball.yVelocity == 0 && ball.x >= GAME_WIDTH - (Paddle.width + Ball.SIZE) / 2) {
+			if (ball.getYVelocity() == 0 && ball.x >= GAME_WIDTH - (Paddle.width + Ball.SIZE) / 2) {
 				ball.x = GAME_WIDTH - (Paddle.width + Ball.SIZE) / 2;
 			}
 
@@ -209,21 +209,21 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			if (ball.y <= 0) {
 				playSoundEffect(2);
 				ball.y = 0;
-				ball.setYDirection(-ball.yVelocity);
+				ball.setYDirection(-ball.getYVelocity());
 			}
 
 			// ball bounce off left edge
 			if (ball.x <= 0) {
 				playSoundEffect(2);
 				ball.x = 0;
-				ball.setXDirection(-ball.xVelocity);
+				ball.setXDirection(-ball.getXVelocity());
 			}
 
 			// ball bounce off right edge
 			if (ball.x >= GAME_WIDTH - Ball.SIZE) {
 				playSoundEffect(2);
 				ball.x = GAME_WIDTH - Ball.SIZE;
-				ball.setXDirection(-ball.xVelocity);
+				ball.setXDirection(-ball.getXVelocity());
 			}
 
 			// ball bounces off paddle
@@ -245,7 +245,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 				// if the ball doesn't stick to the paddle
 				else {
-					ball.setYDirection(-ball.yVelocity); // to bounce back
+					ball.setYDirection(-ball.getYVelocity()); // to bounce back
 
 					// let the ball bounce in a certain direction depending on where it hits the
 					// paddle
@@ -268,7 +268,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			// if the sticky power up is activated
 			// and the ball is at rest on the paddle
 			// set the ball to be in the middle of the paddle
-			if (isStick && ball.yVelocity == 0) {
+			if (isStick && ball.getYVelocity() == 0) {
 				if (ball.x != paddle.x + (Paddle.width - Ball.SIZE) / 2) {
 					ball.x = paddle.x + (Paddle.width - Ball.SIZE) / 2;
 				}
@@ -299,21 +299,21 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					Brick b = curBricks.remove(i); // removes the brick so it is no longer drawn
 
 					// spawn a power up if the broken brick contains one
-					if (b.hasPowerUp) {
+					if (b.hasPower()) {
 						powerUps.add(new PowerUp(b.x, b.y));
 					}
 
 					// bounce off the left or right side of the brick
-					if (!runThru && ball.y + Ball.SIZE / 2 - ball.yVelocity >= b.y
-							&& ball.y + Ball.SIZE / 2 - ball.yVelocity <= b.y + Brick.HEIGHT) {
+					if (!runThru && ball.y + Ball.SIZE / 2 - ball.getYVelocity() >= b.y
+							&& ball.y + Ball.SIZE / 2 - ball.getYVelocity() <= b.y + Brick.HEIGHT) {
 
-						ball.setXDirection(-ball.xVelocity);
+						ball.setXDirection(-ball.getXVelocity());
 					}
 
 					// bounce off the top or bottom side of the brick
 					else if (!runThru) {
 
-						ball.setYDirection(-ball.yVelocity);
+						ball.setYDirection(-ball.getYVelocity());
 					}
 
 					break;
@@ -330,26 +330,26 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					PowerUp p = powerUps.remove(i);
 
 					// yellow power up allows ball to run through many bricks
-					if (p.color == Color.yellow) {
+					if (p.getColor() == Color.yellow) {
 						resetPowerUps();
 						runThru = true;
 						ball.color = Color.yellow;
 
 					}
 					// white power up increases length of paddle
-					else if (p.color == Color.white) {
+					else if (p.getColor() == Color.white) {
 						resetPowerUps();
 						paddle.setWidth(GAME_WIDTH / 7);
 					}
 
 					// pink power up makes ball slower
-					else if (p.color == Color.pink) {
+					else if (p.getColor() == Color.pink) {
 						resetPowerUps();
 						ball.color = Color.pink;
-						if (Math.abs(ball.yVelocity) == Ball.Y_SPEED) {
-							ball.setXDirection(3 * ball.xVelocity / 4);
+						if (Math.abs(ball.getYVelocity()) == Ball.Y_SPEED) {
+							ball.setXDirection(3 * ball.getXVelocity() / 4);
 						}
-						if (ball.yVelocity > 0) {
+						if (ball.getYVelocity() > 0) {
 							ball.setYDirection(3 * Ball.Y_SPEED / 4);
 						} else {
 							ball.setYDirection(-3 * Ball.Y_SPEED / 4);
@@ -358,14 +358,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					}
 
 					// gray power up makes the ball stick to the paddle
-					else if (p.color == Color.gray) {
+					else if (p.getColor() == Color.gray) {
 						resetPowerUps();
 						ball.color = Color.gray;
 						isStick = true;
 
 						// if the ball is already on the paddle, let the ball remain on the paddle
 						if (ball.y == paddle.y - Ball.SIZE) {
-							ball.yVelocity = 0;
+							ball.setYDirection(0);
 						}
 					}
 					powerUpActing = true;
@@ -421,7 +421,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	// changes the level by resetting power ups and adding bricks
-	public void changeLevel() {
+	private void changeLevel() {
 		if (curBricks.isEmpty() && lives > 0 && level <= 3 && started) {
 
 			resetPowerUps();
@@ -564,16 +564,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	// method resets power ups so they are no longer in effect
-	public void resetPowerUps() {
+	private void resetPowerUps() {
 		runThru = false;
 		isStick = false;
 		ball.color = Color.white;
 		paddle.setWidth(GAME_WIDTH / 10);
 
-		if (Math.abs(ball.yVelocity) < Ball.Y_SPEED) {
-			ball.setXDirection(4 * ball.xVelocity / 3);
+		if (Math.abs(ball.getYVelocity()) < Ball.Y_SPEED) {
+			ball.setXDirection(4 * ball.getXVelocity() / 3);
 		}
-		if (ball.yVelocity > 0) {
+		if (ball.getYVelocity() > 0) {
 			ball.setYDirection(Ball.Y_SPEED);
 		} else {
 			ball.setYDirection(-Ball.Y_SPEED);
@@ -655,20 +655,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	// play the selected music continuously in a loop
-	public void playMusicLoop(int i) {
+	private void playMusicLoop(int i) {
 		sound.setFile(i);
 		sound.play();
 		sound.loop();
 	}
 
 	// play the selected sound effect
-	public void playSoundEffect(int i) {
+	private void playSoundEffect(int i) {
 		sound.setFile(i);
 		sound.play();
 	}
 	
 	// stops the music
-	public void stopMusic() {
+	private void stopMusic() {
 		sound.stop();
 	}
 }
