@@ -240,7 +240,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				if (isStick) {
 					ball.setXDirection(0);
 					ball.setYDirection(0);
-					ball.color = Color.gray;
+					ball.setColor(Color.gray);
 				}
 
 				// if the ball doesn't stick to the paddle
@@ -333,7 +333,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					if (p.getColor() == Color.yellow) {
 						resetPowerUps();
 						runThru = true;
-						ball.color = Color.yellow;
+						ball.setColor(Color.yellow);
 
 					}
 					// white power up increases length of paddle
@@ -345,7 +345,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					// pink power up makes ball slower
 					else if (p.getColor() == Color.pink) {
 						resetPowerUps();
-						ball.color = Color.pink;
+						ball.setColor(Color.pink);
 						if (Math.abs(ball.getYVelocity()) == Ball.Y_SPEED) {
 							ball.setXDirection(3 * ball.getXVelocity() / 4);
 						}
@@ -360,7 +360,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 					// gray power up makes the ball stick to the paddle
 					else if (p.getColor() == Color.gray) {
 						resetPowerUps();
-						ball.color = Color.gray;
+						ball.setColor(Color.gray);
 						isStick = true;
 
 						// if the ball is already on the paddle, let the ball remain on the paddle
@@ -567,7 +567,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private void resetPowerUps() {
 		runThru = false;
 		isStick = false;
-		ball.color = Color.white;
+		ball.setColor(Color.white);
 		paddle.setWidth(GAME_WIDTH / 10);
 
 		if (Math.abs(ball.getYVelocity()) < Ball.Y_SPEED) {
