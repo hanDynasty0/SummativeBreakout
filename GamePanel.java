@@ -29,10 +29,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	private boolean started;
 	private boolean runThru, isStick;
 	private boolean powerUpActing;
-	private int powerBounces, lives = 9;
+	private int powerBounces;
+	private int lives = 9;
 	private long startingMusicTime, endingMusicTime;
 
-	public int level;
+	private int level;
 
 	public GamePanel() {
 
