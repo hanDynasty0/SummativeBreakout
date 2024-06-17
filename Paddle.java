@@ -9,7 +9,7 @@ import java.awt.event.*;
 
 public class Paddle extends Rectangle {
 
-	public int xVelocity;
+	private int xVelocity;
 	public final int SPEED = 10; // speed of paddle
 	public static int width = GamePanel.GAME_WIDTH / 10;
 	public static final int HEIGHT = 5; // dimensions of paddle
