@@ -1,6 +1,6 @@
 /* 
  * Author: Han Fang and Hazel Bains
- * Date: June 11
+ * Date: June 17, 2024
  * Description: GamePanel class acts as the main "game loop" - continuously runs the game and calls whatever needs to be called
  */
 
@@ -30,7 +30,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	public boolean runThru, isStick;
 	public boolean powerUpActing;
 	public int powerBounces, lives = 9;
-	public long startMusicTime, endingMusicTime;
+	public long startingMusicTime, endingMusicTime;
 
 	public int level;
 
@@ -57,7 +57,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		isStick = false;
 
 		level = 0;
-		startMusicTime = Long.MAX_VALUE;
+		startingMusicTime = Long.MAX_VALUE;
 		endingMusicTime = Long.MAX_VALUE;
 
 		this.setFocusable(true);
@@ -81,7 +81,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	// calling all draw methods for all objects to be displayed
 	public void draw(Graphics g) {
-
+		
+		// draw the opening screen if the game hasn't started
 		if (!started) {
 			powerUps.clear();
 
@@ -106,6 +107,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			curBricks.add(new Brick(455, 260, true, Color.blue));
 
 		}
+		
+		// draw the game elements if the game has started
 		if (started) {
 			paddle.draw(g);
 			ball.draw(g);
@@ -184,6 +187,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// handles all collision detection and responds accordingly
 	public void checkCollision() {
 		
+		// collisions in the game
 		if(started) {
 			// keep paddle on screen
 			if (paddle.x <= 0) {
@@ -250,7 +254,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 					// makes ball bounces controllable by the player
 				}
-
+				
+				// keep track of the number of ball-paddle bounces with a power up
 				if (powerUpActing) {
 					powerBounces++;
 				}
@@ -275,6 +280,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				resetPowerUps();
 
 				playSoundEffect(4);
+				
 				// player loses a life if ball hits bottom edge of screen
 				lives--;
 				paddle = new Paddle((GAME_WIDTH - Paddle.width) / 2, 15 * (GAME_HEIGHT - Paddle.HEIGHT) / 16);
@@ -376,10 +382,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}
 			
-			// draw the lose screen if the player has no lives
+			// play losing music if the player has no lives
 			if (lives == 0) {
-				startMusicTime = Long.MAX_VALUE;
-				stopMusic();
+				
+				// only allows the music to start playing once
 				if (System.currentTimeMillis() < endingMusicTime) {
 					endingMusicTime = System.currentTimeMillis();
 				}
@@ -388,8 +394,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				}
 			}
 
-			// draw the win screen if the player won all the levels
+			// play winning music if the player won all the levels
 			if (level == 4) {
+				
+				// only allows the music to start playing once
 				if (System.currentTimeMillis() < endingMusicTime) {
 					endingMusicTime = System.currentTimeMillis();
 				}
@@ -399,11 +407,14 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			}
 		}
 		
+		// play the opening theme if the player hasn't begun playing the game
 		else {
-			if (System.currentTimeMillis() < startMusicTime) {
-				startMusicTime = System.currentTimeMillis();
+			
+			// only allows the music to start playing once
+			if (System.currentTimeMillis() < startingMusicTime) {
+				startingMusicTime = System.currentTimeMillis();
 			}
-			while (System.currentTimeMillis() <= startMusicTime + 10) {
+			while (System.currentTimeMillis() <= startingMusicTime + 10) {
 				playMusicLoop(0);
 			}
 		}
@@ -424,9 +435,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			powerUps.clear();
 
 			level++;
+			
+			playSoundEffect(7);
 
 			if (level == 1) {
-
+				instructions = true;
 				// level one brick design
 				curBricks.add(new Brick(5, 100, true, Color.red));
 				curBricks.add(new Brick(90, 100, false, Color.yellow));
@@ -471,6 +484,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 			}
 
 			else if (level == 2) {
+				instructions = true;
 				// level 2 brick design
 				curBricks.add(new Brick(500, 100, false, Color.cyan));
 				curBricks.add(new Brick(415, 100, false, Color.cyan));
@@ -602,12 +616,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	// further action
 	public void keyPressed(KeyEvent e) {
 
+		// start playing the game if the player hits space on the home screen
 		if (!started && e.getKeyCode() == KeyEvent.VK_SPACE) {
 			started = true;
 			curBricks.clear();
 			stopMusic();
 		} else if (e.getKeyCode() == KeyEvent.VK_SPACE && started) {
-			instructions = false; // stop showing instructions after hitting space bar
+			instructions = false; // stop showing instructions after hitting space bar in the game
 		}
 
 		// if the player loses all lives or completes level 3
@@ -617,7 +632,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 				level = 0;
 				lives = 9;
 				started = false;
-				startMusicTime = Long.MAX_VALUE;
+				startingMusicTime = Long.MAX_VALUE;
 				endingMusicTime = Long.MAX_VALUE;
 			}
 		}
@@ -652,6 +667,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		sound.play();
 	}
 	
+	// stops the music
 	public void stopMusic() {
 		sound.stop();
 	}
