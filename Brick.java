@@ -10,9 +10,9 @@ public class Brick extends Rectangle {
 	public static final int WIDTH = 80;
 	public static final int HEIGHT = 40;
 
-	boolean hasPowerUp;
+	private boolean hasPowerUp;
 
-	Color color;
+	private Color color;
 
 	// constructor creates a brick at given location with given dimensions
 	public Brick(int x, int y, boolean hasPower, Color col) {
@@ -21,6 +21,11 @@ public class Brick extends Rectangle {
 		color = col;
 	}
 
+	// accessor for having a power up
+	public boolean hasPower() {
+		return hasPowerUp;
+	}
+	
 	// appearance and position of the brick
 	public void draw(Graphics g) {
 		g.setColor(color);
