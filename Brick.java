@@ -1,6 +1,6 @@
 /* 
  * Author: Han Fang and Hazel Bains
- * Date: June 11
+ * Date: June 17, 2024
  * Description: Brick class manages the display and position of the bricks
  */
 
