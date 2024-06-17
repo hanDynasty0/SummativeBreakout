@@ -15,7 +15,7 @@ public class Ball extends Rectangle {
 	private int xVelocity;
 	public static int xVelocityFactor = 6; // for calculating the resulting x velocity in paddle collisions
 
-	public Color color;
+	private Color color;
 
 	// constructor creates a stationary ball at given location with given dimensions
 	public Ball(int x, int y) {
@@ -23,6 +23,10 @@ public class Ball extends Rectangle {
 		xVelocity = 0;
 		yVelocity = 0;
 		color = Color.white;
+	}
+	
+	public void setColor(Color col) {
+		color = col;
 	}
 	
 	// accessor methods for y and x velocity
